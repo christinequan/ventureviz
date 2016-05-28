@@ -70,6 +70,13 @@
       .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+    svg.selectAll("div")
+    .data(data)
+    .enter().append("div")
+    .style("width", function(d) { return d * 10 + "px"; })
+    .text(function(d) { return d; });
+
+
     </script>
 
 </body>

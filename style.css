@@ -25,6 +25,13 @@ td {
   width: 150px;
 }
 
+div.bar {
+    display: inline-block;
+    width: 10px;
+    height: 15px;   /* We'll override this later */
+    background-color: teal;
+}
+
 #header {
     padding-left: 10px;
     padding-top: 5px;

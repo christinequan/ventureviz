@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<title>The Startup Universe 2.0</title>
+<head>
+
+    <script charset="utf-8" src="https://d3js.org/d3.v3.min.js"></script>
+    <meta charset="utf-8">
+    <script type="text/javascript"></script>
+    <link href="style.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+    <script type="text/javascript">
+
+
+        var data;
+
+
+
+
+
+        var csv = d3.csv("https://dl.dropboxusercontent.com/s/9ol8vwnqba9qf8e/investments.csv?dl=0", function(csvdata) {
+            console.log(csvdata[0]);
+            data = csvdata;
+            
+            var scale = d3.scale.linear()
+                .domain([0, d3.max(data, function(d) { return d['raised_amount_usd']; })])
+                .range([0, 200]);
+
+            d3.select("body").selectAll("div")
+                .data(data)
+                .enter()
+                .append("div")
+                .attr("class", "bar")
+                .style("width", function(d) { 
+                    // console.log(d);
+                    return scale(d['raised_amount_usd']) + "px";
+                });
+                // .text(function(d) { return d; });
+
+
+            // loadInterface();
+        });
+
+
+        function loadInterface() {
+
+            d3.select("body").selectAll("div")
+                .data(data)
+                .enter()
+                .append("div")
+                .attr("class", "bar")
+                .style("height", function(d) { 
+                    // console.log(d);
+                    return d['raised_amount_usd'] * 0.0010 + "px";
+                });
+                // .text(function(d) { return d; });
+
+        }
+
+    </script>
+
+</body>

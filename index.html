@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <script charset="utf-8" src="https://d3js.org/d3.v3.min.js"></script>
+    <meta charset="utf-8">
+    <script type="text/javascript"></script>
+
+</head>
+
+<body>
+
+    <script type="text/javascript">
+
+     var csv = d3.csv("crunchbase-data/investors_small.csv", function(data) {
+        dataset = data;
+      console.log("data loaded");
+      d3.select("body").selectAll("p").data(dataset).enter().append("p").text(
+        function(dataset) {return dataset.investor_name});
+
+  })
+
+    </script>
+
+</body>
+

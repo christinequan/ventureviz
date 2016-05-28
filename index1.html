@@ -14,34 +14,30 @@
 
     <script type="text/javascript">
 
+        const MAX_BAR_HEIGHT = 400;
 
         var data;
 
-
-
-
-
-        var csv = d3.csv("https://dl.dropboxusercontent.com/s/9ol8vwnqba9qf8e/investments.csv?dl=0", function(csvdata) {
+        var csv = d3.csv("https://dl.dropboxusercontent.com/s/tt5wdvap1mm9jbb/investments.csv?dl=0", function(csvdata) {
             console.log(csvdata[0]);
             data = csvdata;
             
             var scale = d3.scale.linear()
-                .domain([0, d3.max(data, function(d) { return d['raised_amount_usd']; })])
-                .range([0, 200]);
+                .domain([0, d3.max(data, function(d) { return parseInt(d['raised_amount_usd']); })])
+                .range([0, MAX_BAR_HEIGHT]);
+
+            console.log(d3.max(data, function(d) { return parseInt(d.raised_amount_usd); }));
 
             d3.select("body").selectAll("div")
                 .data(data)
                 .enter()
                 .append("div")
                 .attr("class", "bar")
-                .style("width", function(d) { 
-                    // console.log(d);
-                    return scale(d['raised_amount_usd']) + "px";
+                .style("height", function(d) { 
+                    return scale(d.raised_amount_usd) + "px";
                 });
-                // .text(function(d) { return d; });
 
 
-            // loadInterface();
         });
 
 

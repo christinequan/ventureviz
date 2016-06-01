@@ -16,11 +16,13 @@
 
         const MAX_BAR_HEIGHT = 400;
 
-        var data;
+        var data, x0;
 
         var csv = d3.csv("https://dl.dropboxusercontent.com/s/tt5wdvap1mm9jbb/investments.csv?dl=0", function(csvdata) {
-            console.log(csvdata[0]);
+            
             data = csvdata;
+
+            x0.domain(csvdata.map(function(data) { return data.investor_name;}));
             
             var scale = d3.scale.linear()
                 .domain([0, d3.max(data, function(d) { return parseInt(d['raised_amount_usd']); })])
@@ -28,21 +30,72 @@
 
             console.log(d3.max(data, function(d) { return parseInt(d.raised_amount_usd); }));
 
+            svg.append("g")
+                .attr("class", "x axis")
+                .attr("transform", "translate(0," + height + ")")
+                .call(xAxis)
+                .selectAll("text")
+                .attr("y", 0)
+                .attr("x", 9)
+                .attr("dy", ".35em")
+                .attr("transform", "rotate(270)")
+                .style("text-anchor", "start");
+
             d3.select("body").selectAll("div")
                 .data(data)
                 .enter()
                 .append("div")
                 .attr("class", "bar")
+                .attr("background-color", function(d) {
+                    console.log(d.funding_round_type)
+                    if (d.funding_round_type == "seed") {
+                    } else if (d.funding_round_type == "venture") {
+                        if (d.funding_round_code == "A") {
+                            return "red";
+                        } else if (d.funding_round_code == "B") {
+                            return "orange";
+                        } else if (d.funding_round_code == "C") {
+                            return "yellow";
+                        } else if (d.fnding_round_code == "D") {
+                            return "green";
+                        } else if (d.funding_round_code == "E") {
+                            return "blue";
+                        } else if (d.funding_round_code == "F") {
+                            return "purple";
+                        } else {
+                            return "grey";
+                        }
+                    } else {
+                        return "grey";
+                    }
+                })
                 .style("height", function(d) { 
                     return scale(d.raised_amount_usd) + "px";
                 });
-
-
         });
 
+        var margin = {top: 0, right: 0, bottom: 0, left: 0},
+            width = 960 - margin.left - margin.right,
+            height = 200 - margin.top - margin.bottom;
+
+        var x = d3.scale.ordinal()
+            .domain(function(csv) {return csv.investor_name})
+            .rangePoints([0, width]);
+
+        var x0 = d3.scale.ordinal()
+            .rangeRoundBands([0, width], .1);
+
+        var xAxis = d3.svg.axis()
+            .scale(x0)
+            .orient("bottom");
+
+        var svg = d3.select("body").append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
         function loadInterface() {
-
             d3.select("body").selectAll("div")
                 .data(data)
                 .enter()
@@ -57,5 +110,6 @@
         }
 
     </script>
+    <div class = "bar"></div>
 
 </body>

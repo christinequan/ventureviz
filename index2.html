@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<title>The Startup Universe 2.0</title>
+<head>
+
+    <script charset="utf-8" src="https://d3js.org/d3.v3.min.js"></script>
+    <meta charset="utf-8">
+    <script type="text/javascript"></script>
+    <script src="d3-tip-master/index.js"></script>
+    <link href="style.css" rel="stylesheet">
+    <link rel="stylesheet" href="font-awesome-4.6.3/css/font-awesome.min.css">
+    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
+
+</head>
+
+<body>
+
+    <div class="header">
+        <h1>Follow the money.</h1>
+        <button class="pure-button">
+            <i class="fa fa-industry" aria-hidden="true"></i>
+            Industry overviews
+        </button>
+    </div>
+    <br>
+
+    <div class="pure-menu custom-restricted-width">
+        <span class="pure-menu-heading">Industries</span>
+
+        <ul class="pure-menu-list">
+            <li class="pure-menu-item"><a href="#" class="pure-menu-link">Biotechnology</a></li>
+            <li class="pure-menu-item"><a href="#" class="pure-menu-link">Software</a></li>
+            <li class="pure-menu-item"><a href="#" class="pure-menu-link">Consumer Electronics</a></li>
+            <li class="pure-menu-item"><a href="#" class="pure-menu-link">Financial Technology</a></li>
+            <li class="pure-menu-item"><a href="#" class="pure-menu-link">Gaming</a></li>
+            <li class="pure-menu-item"><a href="#" class="pure-menu-link">Advertising</a></li>
+            <li class="pure-menu-item"><a href="#" class="pure-menu-link">Communication</a></li>
+            <li class="pure-menu-item"><a href="#" class="pure-menu-link">Entertainment</a></li>
+            <li class="pure-menu-item"><a href="#" class="pure-menu-link">eCommerce</a></li>
+            <li class="pure-menu-item"><a href="#" class="pure-menu-link">Security</a></li>
+            <li class="pure-menu-item"><a href="#" class="pure-menu-link">Enterprise</a></li>
+            <li class="pure-menu-item"><a href="#" class="pure-menu-link">Education</a></li>
+        </ul>
+    </div>
+    
+
+
+    <script type="text/javascript">
+
+
+    /* To-do:
+    1) Set the default view to a minimum value for the bars?
+        
+    */
+
+        const MAX_BAR_HEIGHT = 500;
+
+        var data;
+
+
+        var h = MAX_BAR_HEIGHT;
+        var w = 800;
+
+        // Add an svg element to the DOM
+        var svg = d3.select("body").append("svg")
+            .attr('class', 'svg')
+            .attr("width", w)
+            .attr("height", h);
+            
+
+        
+
+
+
+        var csv = d3.csv("https://dl.dropboxusercontent.com/s/tt5wdvap1mm9jbb/investments.csv?dl=0", function(csvdata) {
+            data = csvdata;
+            
+            var funding_round_data = {};
+            for (var i = 0; i < data.length; i++) {
+                var company_name = data[i].company_name;
+                if (funding_round_data[company_name] === undefined) {
+                    funding_round_data[company_name] = [];
+                    funding_round_data[company_name].company = company_name;
+                }
+                var newRound = {type: data[i].funding_round_type, series: data[i].funding_round_code, amount: data[i].raised_amount_usd};
+                var addRound = true;
+                for (var j = 0; j < funding_round_data[company_name].length; j++) {
+                    if (funding_round_data[company_name][j].series === newRound.series && funding_round_data[company_name][j] || funding_round_data[company_name][j].type === newRound.amount) {
+                        addRound = false;
+                        break;
+                    }
+                }
+                if (addRound) {
+                    funding_round_data[company_name].push(newRound);
+                }        
+            }
+
+            var json_data = JSON.stringify(funding_round_data);
+            console.log(json_data);
+
+            var scale = d3.scale.linear()
+                .domain([0, d3.max(data, function(d) { return parseInt(d['raised_amount_usd']); })])
+                .range([0, MAX_BAR_HEIGHT]);
+
+            // console.log(d3.max(data, function(d) { return parseInt(d.raised_amount_usd); }));
+
+            var tip = d3.tip()
+            .attr('class', 'd3-tip')
+            .offset([-10, 0])
+            .html(function(d) {
+                var company = d.company_name;
+                var response = "<h3>" + company + "</h3>";
+                for (var i = 0; i < funding_round_data[company].length; i++) {
+                    response += "Series: " + funding_round_data[company][i]['type'] + " " +funding_round_data[company][i]['series'] + " " +funding_round_data[company][i]['amount']+ "<br>";
+                }
+
+                return response;
+            });
+
+            svg.call(tip);
+
+            svg.selectAll("rect")
+                .data(data)
+                .enter()
+                .append("rect")
+                .attr("class", "bar")
+                .attr("width", function() {
+                    return w / data.length;
+                })
+                .attr("height", function(d) {
+                    return scale(d.raised_amount_usd) + "px";
+                })
+                .attr("x", function(d, i) {
+                    return i * ((w / data.length) + 1);
+                })
+                .attr("y", function(d) {
+                    return h - scale(d.raised_amount_usd);
+                })
+                .on('mouseover', tip.show)
+                .on('mouseout', tip.hide);
+
+
+
+
+        });
+
+
+
+
+        function loadInterface() {
+
+            d3.select("body").selectAll("div")
+                .data(data)
+                .enter()
+                .append("div")
+                .attr("class", "bar")
+                .style("height", function(d) { 
+                    // console.log(d);
+                    return d['raised_amount_usd'] * 0.0010 + "px";
+                });
+                // .text(function(d) { return d; });
+
+        }
+
+    </script>
+
+</body>

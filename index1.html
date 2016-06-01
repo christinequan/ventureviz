@@ -69,9 +69,11 @@
                         return "grey";
                     }
                 })
+                .on("mouseover", function(){d3.select(this).style("fill", "aliceblue");})
+                .on("mouseout", function(){d3.select(this).style("fill", "white");}) // change this to return back to normal color
                 .style("height", function(d) { 
                     return scale(d.raised_amount_usd) + "px";
-                });
+            });
         });
 
         var margin = {top: 0, right: 0, bottom: 0, left: 0},

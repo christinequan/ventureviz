@@ -3,6 +3,12 @@
 <title>The Startup Universe 2.0</title>
 <head>
 
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+    <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+
     <meta charset="utf-8">
     
     <link href="style.css" rel="stylesheet">
@@ -19,12 +25,10 @@
 
 <body>
 
+    
+
     <div class="header">
         <h1>Follow the money.</h1>
-        <button class="pure-button">
-            <i class="fa fa-industry" aria-hidden="true"></i>
-            Industry overviews
-        </button>
     </div>
     <br>
 
@@ -45,6 +49,46 @@
 
         </ul>
     </div>
+
+    <!-- <div data-role="page"> -->
+        
+<!--     <div id="graph-container">
+
+    </div> -->
+
+
+<!--     <div>
+        <div style="width:35%; display: inline-block; margin-left: 150px">    
+
+            <div data-role="main" class="ui-content">
+                <form method="post" action="demoform.asp">
+                    <div data-role="rangeslider">
+                        <label for="price-min">Amount:</label>
+                        <input type="range" name="price-min" id="price-min" value="200" min="0" max="1000">
+                        <label for="price-max">Amount:</label>
+                        <input type="range" name="price-max" id="price-max" value="800" min="0" max="1000">
+                    </div>
+              </form>  
+            </div>
+        </div>
+
+
+        <div style="width:35%; display: inline-block">    
+
+            <div data-role="main" class="ui-content">
+                <form method="post" action="demoform.asp">
+                    <div data-role="rangeslider">
+                        <label for="price-min">Date:</label>
+                        <input type="range" name="price-min" id="price-min" value="200" min="0" max="1000">
+                        <label for="price-max">Date:</label>
+                        <input type="range" name="price-max" id="price-max" value="800" min="0" max="1000">
+                    </div>
+              </form>
+            </div>
+        </div>
+    </div> -->
+
+    <!-- </div>  -->
     
 
 
@@ -65,33 +109,37 @@
         var w = 800;
 
 
+
         // Add an svg element to the DOM
+        // var svg = d3.select("body").append("svg")
         var svg = d3.select("body").append("svg")
             .attr('class', 'svg')
             .attr("width", w)
             .attr("height", h);
 
-        /* URLs for industry-specific data */
-        var biotechURL = "https://dl.dropboxusercontent.com/s/o39hcgq0dr3db0a/biotechnology_usa.csv?dl=0";
-        var cleantechURL = "https://dl.dropboxusercontent.com/s/iekcwbaym581gw2/cleantechnology_usa.csv?dl=0";
-        var enterpriseURL = "https://dl.dropboxusercontent.com/s/s3fz7j4dafcjp4s/enterprisesoftware_usa.csv?dl=0";
-        var ecommerceURL = "https://dl.dropboxusercontent.com/s/es6cll3wik7xptk/e-commerce_usa.csv?dl=0";
-        var hardwareURL = "https://dl.dropboxusercontent.com/s/8owvlqkl0lcldcp/hardwareandsoftware_usa.csv?dl=0";
-        var healthURL = "https://dl.dropboxusercontent.com/s/gjnybzx0us6jrhi/healthcare_usa.csv?dl=0";
-        var mobileURL = "https://dl.dropboxusercontent.com/s/3ehq2t7t5hor6r5/mobile_usa.csv?dl=0";
-        var securityURL = "https://dl.dropboxusercontent.com/s/esi6xtu8psdyynq/security_usa.csv?dl=0";
-        var semiconductorsURL = "https://dl.dropboxusercontent.com/s/6bd7znajxf7hwgh/semiconductors_usa.csv?dl=0";
-        var softwareURL = "https://dl.dropboxusercontent.com/s/7inf1nth7red7t2/software_usa.csv?dl=0";
 
+
+        var biotechURL = "https://dl.dropboxusercontent.com/s/y0ahauamgtshh13/biotechnology_usa.csv?dl=0"
+        var cleantechURL = "https://dl.dropboxusercontent.com/s/5imaxqfwh5fb7so/cleantechnology_usa.csv?dl=0"
+        var curatedwebURL = "https://dl.dropboxusercontent.com/s/1gih7rk2bsyey6a/curatedweb_usa.csv?dl=0"
+        var enterpriseURL = "https://dl.dropboxusercontent.com/s/znutk7ft6uimuec/e-commerce_usa.csv?dl=0"
+        var ecommerceURL = "https://dl.dropboxusercontent.com/s/nnecx5mxyug3mrz/enterprisesoftware_usa.csv?dl=0"
+        var hardwareURL = "https://dl.dropboxusercontent.com/s/miu5se5mbdarld2/hardwareandsoftware_usa.csv?dl=0"
+        var healthURL = "https://dl.dropboxusercontent.com/s/0ji157ozgkvdjrf/healthcare_usa.csv?dl=0"
+        var mobileURL = "https://dl.dropboxusercontent.com/s/k16eh23dve8qdys/mobile_usa.csv?dl=0"
+        var securityURL =   "https://dl.dropboxusercontent.com/s/aqfzq94aei9smwv/security_usa.csv?dl=0"
+        var semiconductorsURL = "https://dl.dropboxusercontent.com/s/xgxzsfz0ht20r4x/semiconductors_usa.csv?dl=0"
+        var softwareURL = "https://dl.dropboxusercontent.com/s/3pvyvhrtf128z4y/software_usa.csv?dl=0"
 
 
         /* Preload all of the industry data into objects */
-        var biotechData, cleantechData, enterpriseData, ecommerceData, hardwareData, healthData, mobileData, securityData, semiconductorsData, softwareData;
+        var biotechData, cleantechData, curatedwebData, enterpriseData, ecommerceData, hardwareData, healthData, mobileData, securityData, semiconductorsData, softwareData;
 
         function loadData() {
             queue()
             .defer(d3.csv, biotechURL)
             .defer(d3.csv, cleantechURL)
+            .defer(d3.csv, curatedwebURL)
             .defer(d3.csv, enterpriseURL)
             .defer(d3.csv, ecommerceURL)
             .defer(d3.csv, hardwareURL)
@@ -106,10 +154,11 @@
         loadData();
 
 
-        function visualizeData(error, biotechData_L, cleantechData_L, enterpriseData_L, ecommerceData_L, hardwareData_L, healthData_L, mobileData_L, securityData_L, semiconductorsData_L, softwareData_L) {
+        function visualizeData(error, biotechData_L, cleantechData_L, curatedwebData_L, enterpriseData_L, ecommerceData_L, hardwareData_L, healthData_L, mobileData_L, securityData_L, semiconductorsData_L, softwareData_L) {
             if (error) throw error;
             biotechData = biotechData_L;
             cleantechData = cleantechData_L;
+            curatedwebData = curatedwebData_L;
             enterpriseData = enterpriseData_L;
             ecommerceData = ecommerceData_L;
             hardwareData = hardwareData_L;

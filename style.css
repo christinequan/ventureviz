@@ -6,6 +6,7 @@ html, body {
     height: 100%;
     overflow: hidden;
 
+
 }
 
 div.names {
@@ -20,6 +21,12 @@ div.bar {
     width: 10px;
     height: 0px;
     background-color: blue;
+}
+
+#graph-container {
+    left: 30%;
+    width: 800px;
+    height: 500px;
 }
 
 .header {

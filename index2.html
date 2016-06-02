@@ -252,25 +252,25 @@
                 .attr("fill", function(d) {
                         console.log(d.funding_round_type)
                         if (d.funding_round_type == "seed") {
-                            return "teal";
+                            return "#edf8b1";
                         } else if (d.funding_round_type == "venture") {
                             if (d.funding_round_code == "A") {
-                                return "red";
+                                return "#c7e9b4";
                             } else if (d.funding_round_code == "B") {
-                                return "orange";
+                                return "#7fcdbb";
                             } else if (d.funding_round_code == "C") {
-                                return "yellow";
+                                return "#41b6c4";
                             } else if (d.fnding_round_code == "D") {
-                                return "green";
+                                return "#1d91c0";
                             } else if (d.funding_round_code == "E") {
-                                return "blue";
+                                return "#225ea8";
                             } else if (d.funding_round_code == "F") {
-                                return "purple";
+                                return "#253494";
                             } else {
-                                return "indigo";
+                                return "#081d58";
                             }
-                        } else {
-                            return "black";
+                        } else {                                            // angel
+                            return "#ffffd9";
                         }
                 })
                     .on('mouseover', function(d) {

@@ -111,7 +111,17 @@
                 var company = d.company_name;
                 var response = "<h3>" + company + "</h3>";
                 for (var i = 0; i < funding_round_data[company].length; i++) {
-                    response += "Series: " + funding_round_data[company][i]['type'] + " " +funding_round_data[company][i]['series'] + " " +funding_round_data[company][i]['amount']+ "<br>";
+                    var type = funding_round_data[company][i]['type']
+                    if (type == "seed") {
+                        response += "Seed Round: ";
+                    } else if (type == "angel") {
+                        response += "Angel Investment: ";
+                    } else if (type == "venture") {
+                        response += "Series " + funding_round_data[company][i]['series'] +": ";
+                    } else {
+                        response += "Other Investment: "
+                    }
+                    response += funding_round_data[company][i]['amount']+ "<br>";
                 }
 
                 return response;
@@ -136,11 +146,32 @@
                 .attr("y", function(d) {
                     return h - scale(d.raised_amount_usd);
                 })
+                .attr("fill", function(d) {
+                    console.log(d.funding_round_type)
+                    if (d.funding_round_type == "seed") {
+                        return "teal";
+                    } else if (d.funding_round_type == "venture") {
+                        if (d.funding_round_code == "A") {
+                            return "red";
+                        } else if (d.funding_round_code == "B") {
+                            return "orange";
+                        } else if (d.funding_round_code == "C") {
+                            return "yellow";
+                        } else if (d.fnding_round_code == "D") {
+                            return "green";
+                        } else if (d.funding_round_code == "E") {
+                            return "blue";
+                        } else if (d.funding_round_code == "F") {
+                            return "purple";
+                        } else {
+                            return "grey";
+                        }
+                    } else {
+                        return "grey";
+                    }
+                })
                 .on('mouseover', tip.show)
                 .on('mouseout', tip.hide);
-
-
-
 
         });
 

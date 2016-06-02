@@ -46,7 +46,7 @@
                 .enter()
                 .append("div")
                 .attr("class", "bar")
-                .attr("background-color", function(d) {
+                .attr("fill", function(d) {
                     console.log(d.funding_round_type)
                     if (d.funding_round_type == "seed") {
                     } else if (d.funding_round_type == "venture") {

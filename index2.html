@@ -3,13 +3,17 @@
 <title>The Startup Universe 2.0</title>
 <head>
 
-    <script charset="utf-8" src="https://d3js.org/d3.v3.min.js"></script>
     <meta charset="utf-8">
-    <script type="text/javascript"></script>
-    <script src="d3-tip-master/index.js"></script>
+    
     <link href="style.css" rel="stylesheet">
     <link rel="stylesheet" href="font-awesome-4.6.3/css/font-awesome.min.css">
     <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
+
+    <script charset="utf-8" src="https://d3js.org/d3.v3.min.js"></script>
+    <script type="text/javascript"></script>
+    <script src="d3-tip-master/index.js"></script>
+    <script src="http://d3js.org/queue.v1.min.js"></script>
+
 
 </head>
 
@@ -28,18 +32,17 @@
         <span class="pure-menu-heading">Industries</span>
 
         <ul class="pure-menu-list">
-            <li class="pure-menu-item"><a href="#" class="pure-menu-link">Biotechnology</a></li>
-            <li class="pure-menu-item"><a href="#" class="pure-menu-link">Software</a></li>
-            <li class="pure-menu-item"><a href="#" class="pure-menu-link">Consumer Electronics</a></li>
-            <li class="pure-menu-item"><a href="#" class="pure-menu-link">Financial Technology</a></li>
-            <li class="pure-menu-item"><a href="#" class="pure-menu-link">Gaming</a></li>
-            <li class="pure-menu-item"><a href="#" class="pure-menu-link">Advertising</a></li>
-            <li class="pure-menu-item"><a href="#" class="pure-menu-link">Communication</a></li>
-            <li class="pure-menu-item"><a href="#" class="pure-menu-link">Entertainment</a></li>
-            <li class="pure-menu-item"><a href="#" class="pure-menu-link">eCommerce</a></li>
-            <li class="pure-menu-item"><a href="#" class="pure-menu-link">Security</a></li>
-            <li class="pure-menu-item"><a href="#" class="pure-menu-link">Enterprise</a></li>
-            <li class="pure-menu-item"><a href="#" class="pure-menu-link">Education</a></li>
+            <li class="pure-menu-item"><a id="biotech" href="#" onclick="loadView(this.id)" class="pure-menu-link">Biotech</a></li>
+            <li class="pure-menu-item"><a id="cleantech" href="#" onclick="loadView(this.id)" class="pure-menu-link">Cleantech</a></li>
+            <li class="pure-menu-item"><a id="enterprise" href="#" onclick="loadView(this.id)" class="pure-menu-link">Enterprise</a></li>
+            <li class="pure-menu-item"><a id="ecommerce" href="#" onclick="loadView(this.id)" class="pure-menu-link">eCommerce</a></li>
+            <li class="pure-menu-item"><a id="hardware" href="#" onclick="loadView(this.id)" class="pure-menu-link">Hardware</a></li>
+            <li class="pure-menu-item"><a id="health" href="#" onclick="loadView(this.id)" class="pure-menu-link">Health</a></li>
+            <li class="pure-menu-item"><a id="mobile" href="#" onclick="loadView(this.id)" class="pure-menu-link">Mobile</a></li>
+            <li class="pure-menu-item"><a id="security" href="#" onclick="loadView(this.id)" class="pure-menu-link">Security</a></li>
+            <li class="pure-menu-item"><a id="semiconductors" href="#" onclick="loadView(this.id)" class="pure-menu-link">Semiconductors</a></li>
+            <li class="pure-menu-item"><a id="software" href="#" onclick="loadView(this.id)" class="pure-menu-link">Software</a></li>
+
         </ul>
     </div>
     
@@ -61,20 +64,161 @@
         var h = MAX_BAR_HEIGHT;
         var w = 800;
 
+
         // Add an svg element to the DOM
         var svg = d3.select("body").append("svg")
             .attr('class', 'svg')
             .attr("width", w)
             .attr("height", h);
-            
 
-        
+        /* URLs for industry-specific data */
+        var biotechURL = "https://dl.dropboxusercontent.com/s/o39hcgq0dr3db0a/biotechnology_usa.csv?dl=0";
+        var cleantechURL = "https://dl.dropboxusercontent.com/s/iekcwbaym581gw2/cleantechnology_usa.csv?dl=0";
+        var enterpriseURL = "https://dl.dropboxusercontent.com/s/s3fz7j4dafcjp4s/enterprisesoftware_usa.csv?dl=0";
+        var ecommerceURL = "https://dl.dropboxusercontent.com/s/es6cll3wik7xptk/e-commerce_usa.csv?dl=0";
+        var hardwareURL = "https://dl.dropboxusercontent.com/s/8owvlqkl0lcldcp/hardwareandsoftware_usa.csv?dl=0";
+        var healthURL = "https://dl.dropboxusercontent.com/s/gjnybzx0us6jrhi/healthcare_usa.csv?dl=0";
+        var mobileURL = "https://dl.dropboxusercontent.com/s/3ehq2t7t5hor6r5/mobile_usa.csv?dl=0";
+        var securityURL = "https://dl.dropboxusercontent.com/s/esi6xtu8psdyynq/security_usa.csv?dl=0";
+        var semiconductorsURL = "https://dl.dropboxusercontent.com/s/6bd7znajxf7hwgh/semiconductors_usa.csv?dl=0";
+        var softwareURL = "https://dl.dropboxusercontent.com/s/7inf1nth7red7t2/software_usa.csv?dl=0";
 
 
+
+        /* Preload all of the industry data into objects */
+        var biotechData, cleantechData, enterpriseData, ecommerceData, hardwareData, healthData, mobileData, securityData, semiconductorsData, softwareData;
+
+        function loadData() {
+            queue()
+            .defer(d3.csv, biotechURL)
+            .defer(d3.csv, cleantechURL)
+            .defer(d3.csv, enterpriseURL)
+            .defer(d3.csv, ecommerceURL)
+            .defer(d3.csv, hardwareURL)
+            .defer(d3.csv, healthURL)
+            .defer(d3.csv, mobileURL)
+            .defer(d3.csv, securityURL)
+            .defer(d3.csv, semiconductorsURL)
+            .defer(d3.csv, softwareURL)
+            .await(visualizeData);
+        }
+
+        loadData();
+
+
+        function visualizeData(error, biotechData_L, cleantechData_L, enterpriseData_L, ecommerceData_L, hardwareData_L, healthData_L, mobileData_L, securityData_L, semiconductorsData_L, softwareData_L) {
+            if (error) throw error;
+            biotechData = biotechData_L;
+            cleantechData = cleantechData_L;
+            enterpriseData = enterpriseData_L;
+            ecommerceData = ecommerceData_L;
+            hardwareData = hardwareData_L;
+            healthData = healthData_L;
+            mobileData = mobileData_L;
+            securityData = securityData_L;
+            semiconductorsData = semiconductorsData_L;
+            softwareData = softwareData_L;
+
+        }
+        // Changes colors
+
+        function colorOver(d){
+            d3.select(this).style('fill','grey');
+            //tip.show;
+        }
+
+        function colorOut(d) {
+            var rect = d3.select(this);
+            rect.style("fill", function(d) {
+                return d.color;
+            });
+        }
+
+        // Changes the view to the correct industry
+        function loadView(clicked_id) {
+            console.log(clicked_id);
+            var data;
+            switch(clicked_id) {
+                case 'biotech': data = biotechData; break;
+                case 'cleantech': data = cleantechData; break;
+                case 'enterprise': data = enterpriseData; break;
+                case 'ecommerce': data = ecommerceData; break;
+                case 'gaming': data = gamingData; break;
+                case 'hardware': data = hardwareData; break;
+                case 'health': data = healthData; break;
+                case 'mobile': data = mobileData; break;
+                case 'security': data = securityData; break;
+                case 'semiconductors': data = semiconductorsData; break;
+                case 'software': data = softwareData; break;
+            }
+
+            var scale = d3.scale.linear()
+                .domain([0, d3.max(data, function(d) { return parseInt(d['raised_amount_usd']); })])
+                .range([0, MAX_BAR_HEIGHT]);
+
+            d3.selectAll("svg > *").remove();
+
+            svg.selectAll("rect")
+                .data(data)
+                .enter()
+                .append("rect")
+                .attr("width", function() {
+                    return w / data.length;
+                })
+                .attr("height", function(d) {
+                    return scale(d.raised_amount_usd) + "px";
+                })
+                .attr("x", function(d, i) {
+                    return i * ((w / data.length) + 1);
+                })
+                .attr("y", function(d) {
+                    return h - scale(d.raised_amount_usd);
+                })
+
+                .attr("fill", function(d) {
+                        console.log(d.funding_round_type)
+                        if (d.funding_round_type == "seed") {
+                            return "teal";
+                        } else if (d.funding_round_type == "venture") {
+                            if (d.funding_round_code == "A") {
+                                return "red";
+                            } else if (d.funding_round_code == "B") {
+                                return "orange";
+                            } else if (d.funding_round_code == "C") {
+                                return "yellow";
+                            } else if (d.fnding_round_code == "D") {
+                                return "green";
+                            } else if (d.funding_round_code == "E") {
+                                return "blue";
+                            } else if (d.funding_round_code == "F") {
+                                return "purple";
+                            } else {
+                                return "indigo";
+                            }
+                        } else {
+                            return "black";
+                        }
+                })
+                    .on('mouseover', function(d) {
+                        colorOver.call(this,d);
+                        //tip.show(d);
+                    })
+                    .on('mouseout', function(d) {
+                        colorOut.call(this,d);
+                        //tip.hide(d);
+                    });
+                // .on('mouseover', tip.show)
+                // .on('mouseout', tip.hide);
+
+        }
+
+
+        // On-click --> switch view
 
         var csv = d3.csv("https://dl.dropboxusercontent.com/s/tt5wdvap1mm9jbb/investments.csv?dl=0", function(csvdata) {
             data = csvdata;
             
+            /* store the tooltip data in a data structure */
             var funding_round_data = {};
             for (var i = 0; i < data.length; i++) {
                 var company_name = data[i].company_name;
@@ -102,8 +246,6 @@
                 .domain([0, d3.max(data, function(d) { return parseInt(d['raised_amount_usd']); })])
                 .range([0, MAX_BAR_HEIGHT]);
 
-            // console.log(d3.max(data, function(d) { return parseInt(d.raised_amount_usd); }));
-
             var tip = d3.tip()
             .attr('class', 'd3-tip')
             .offset([-10, 0])
@@ -123,44 +265,53 @@
                 .data(data)
                 .enter()
                 .append("rect")
-                .attr("class", "bar")
-                .attr("width", function() {
-                    return w / data.length;
-                })
-                .attr("height", function(d) {
-                    return scale(d.raised_amount_usd) + "px";
-                })
-                .attr("x", function(d, i) {
-                    return i * ((w / data.length) + 1);
-                })
-                .attr("y", function(d) {
-                    return h - scale(d.raised_amount_usd);
-                })
-                .on('mouseover', tip.show)
-                .on('mouseout', tip.hide);
-
-
-
+                    .attr("class", "bar")
+                    .attr("width", function() {
+                        return w / data.length;
+                    })
+                    .attr("height", function(d) {
+                        return scale(d.raised_amount_usd) + "px";
+                    })
+                    .attr("x", function(d, i) {
+                        return i * ((w / data.length) + 1);
+                    })
+                    .attr("y", function(d) {
+                        return h - scale(d.raised_amount_usd);
+                    })
+                    .attr("fill", function(d) {
+                        console.log(d.funding_round_type)
+                        if (d.funding_round_type == "seed") {
+                            return "teal";
+                        } else if (d.funding_round_type == "venture") {
+                            if (d.funding_round_code == "A") {
+                                return "red";
+                            } else if (d.funding_round_code == "B") {
+                                return "orange";
+                            } else if (d.funding_round_code == "C") {
+                                return "yellow";
+                            } else if (d.fnding_round_code == "D") {
+                                return "green";
+                            } else if (d.funding_round_code == "E") {
+                                return "blue";
+                            } else if (d.funding_round_code == "F") {
+                                return "purple";
+                            } else {
+                                return "indigo";
+                            }
+                        } else {
+                            return "black";
+                        }
+                    })
+                    .on('mouseover', function(d) {
+                        colorOver.call(this,d);
+                        //tip.show(d);
+                    })
+                    .on('mouseout', function(d) {
+                        colorOut.call(this,d);
+                        //tip.hide(d);
+                    });
 
         });
-
-
-
-
-        function loadInterface() {
-
-            d3.select("body").selectAll("div")
-                .data(data)
-                .enter()
-                .append("div")
-                .attr("class", "bar")
-                .style("height", function(d) { 
-                    // console.log(d);
-                    return d['raised_amount_usd'] * 0.0010 + "px";
-                });
-                // .text(function(d) { return d; });
-
-        }
 
     </script>
 

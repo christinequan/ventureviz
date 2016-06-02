@@ -108,6 +108,7 @@
         var h = MAX_BAR_HEIGHT;
         var w = 800;
 
+        var investor_string = "Investor."
 
 
         // Add an svg element to the DOM
@@ -116,6 +117,29 @@
             .attr('class', 'svg')
             .attr("width", w)
             .attr("height", h);
+
+
+        var tip = d3.tip()
+            .attr('class', 'd3-tip')
+            .offset([-10, 0])
+            .html(function(d) {
+                var company = d.company_name;
+                var response = "<h3>" + company + "</h3>";
+                response += d.funding_round_type + " " + d.funding_round_code + " " + d.raised_amount_usd + "<br>";
+                response += "<h4>Investors</h4>";
+                for (var i = 1; i < 27; i++) {
+                    var property = String(investor_string + i);
+                    if (d[property] === "NA") break;
+                    console.log(d[property]);
+                    response += d[property] + "<br>";
+                }
+                console.log(company);
+                console.log(d);
+
+                return response;
+            });
+
+        svg.call(tip);
 
 
 
@@ -168,6 +192,7 @@
             semiconductorsData = semiconductorsData_L;
             softwareData = softwareData_L;
 
+            console.log(biotechData);
         }
         // Changes colors
 
@@ -250,11 +275,11 @@
                 })
                     .on('mouseover', function(d) {
                         colorOver.call(this,d);
-                        //tip.show(d);
+                        tip.show(d);
                     })
                     .on('mouseout', function(d) {
                         colorOut.call(this,d);
-                        //tip.hide(d);
+                        tip.hide(d);
                     });
                 // .on('mouseover', tip.show)
                 // .on('mouseout', tip.hide);
@@ -262,105 +287,109 @@
         }
 
 
+
+
+// IGNORE EVERYTHING AFTER THIS !!!!!!!!!!!!!!!!!
+
         // On-click --> switch view
 
-        var csv = d3.csv("https://dl.dropboxusercontent.com/s/tt5wdvap1mm9jbb/investments.csv?dl=0", function(csvdata) {
-            data = csvdata;
+        // var csv = d3.csv("https://dl.dropboxusercontent.com/s/tt5wdvap1mm9jbb/investments.csv?dl=0", function(csvdata) {
+        //     data = csvdata;
             
-            /* store the tooltip data in a data structure */
-            var funding_round_data = {};
-            for (var i = 0; i < data.length; i++) {
-                var company_name = data[i].company_name;
-                if (funding_round_data[company_name] === undefined) {
-                    funding_round_data[company_name] = [];
-                    funding_round_data[company_name].company = company_name;
-                }
-                var newRound = {type: data[i].funding_round_type, series: data[i].funding_round_code, amount: data[i].raised_amount_usd};
-                var addRound = true;
-                for (var j = 0; j < funding_round_data[company_name].length; j++) {
-                    if (funding_round_data[company_name][j].series === newRound.series && funding_round_data[company_name][j] || funding_round_data[company_name][j].type === newRound.amount) {
-                        addRound = false;
-                        break;
-                    }
-                }
-                if (addRound) {
-                    funding_round_data[company_name].push(newRound);
-                }        
-            }
+        //     /* store the tooltip data in a data structure */
+        //     var funding_round_data = {};
+        //     for (var i = 0; i < data.length; i++) {
+        //         var company_name = data[i].company_name;
+        //         if (funding_round_data[company_name] === undefined) {
+        //             funding_round_data[company_name] = [];
+        //             funding_round_data[company_name].company = company_name;
+        //         }
+        //         var newRound = {type: data[i].funding_round_type, series: data[i].funding_round_code, amount: data[i].raised_amount_usd};
+        //         var addRound = true;
+        //         for (var j = 0; j < funding_round_data[company_name].length; j++) {
+        //             if (funding_round_data[company_name][j].series === newRound.series && funding_round_data[company_name][j] || funding_round_data[company_name][j].type === newRound.amount) {
+        //                 addRound = false;
+        //                 break;
+        //             }
+        //         }
+        //         if (addRound) {
+        //             funding_round_data[company_name].push(newRound);
+        //         }        
+        //     }
 
-            var json_data = JSON.stringify(funding_round_data);
-            console.log(json_data);
+        //     var json_data = JSON.stringify(funding_round_data);
+        //     console.log(json_data);
 
-            var scale = d3.scale.linear()
-                .domain([0, d3.max(data, function(d) { return parseInt(d['raised_amount_usd']); })])
-                .range([0, MAX_BAR_HEIGHT]);
+        //     var scale = d3.scale.linear()
+        //         .domain([0, d3.max(data, function(d) { return parseInt(d['raised_amount_usd']); })])
+        //         .range([0, MAX_BAR_HEIGHT]);
 
-            var tip = d3.tip()
-            .attr('class', 'd3-tip')
-            .offset([-10, 0])
-            .html(function(d) {
-                var company = d.company_name;
-                var response = "<h3>" + company + "</h3>";
-                for (var i = 0; i < funding_round_data[company].length; i++) {
-                    response += "Series: " + funding_round_data[company][i]['type'] + " " +funding_round_data[company][i]['series'] + " " +funding_round_data[company][i]['amount']+ "<br>";
-                }
+        //     var tip = d3.tip()
+        //     .attr('class', 'd3-tip')
+        //     .offset([-10, 0])
+        //     .html(function(d) {
+        //         var company = d.company_name;
+        //         var response = "<h3>" + company + "</h3>";
+        //         for (var i = 0; i < funding_round_data[company].length; i++) {
+        //             response += "Series: " + funding_round_data[company][i]['type'] + " " +funding_round_data[company][i]['series'] + " " +funding_round_data[company][i]['amount']+ "<br>";
+        //         }
 
-                return response;
-            });
+        //         return response;
+        //     });
 
-            svg.call(tip);
+        //     svg.call(tip);
 
-            svg.selectAll("rect")
-                .data(data)
-                .enter()
-                .append("rect")
-                    .attr("class", "bar")
-                    .attr("width", function() {
-                        return w / data.length;
-                    })
-                    .attr("height", function(d) {
-                        return scale(d.raised_amount_usd) + "px";
-                    })
-                    .attr("x", function(d, i) {
-                        return i * ((w / data.length) + 1);
-                    })
-                    .attr("y", function(d) {
-                        return h - scale(d.raised_amount_usd);
-                    })
-                    .attr("fill", function(d) {
-                        console.log(d.funding_round_type)
-                        if (d.funding_round_type == "seed") {
-                            return "teal";
-                        } else if (d.funding_round_type == "venture") {
-                            if (d.funding_round_code == "A") {
-                                return "red";
-                            } else if (d.funding_round_code == "B") {
-                                return "orange";
-                            } else if (d.funding_round_code == "C") {
-                                return "yellow";
-                            } else if (d.fnding_round_code == "D") {
-                                return "green";
-                            } else if (d.funding_round_code == "E") {
-                                return "blue";
-                            } else if (d.funding_round_code == "F") {
-                                return "purple";
-                            } else {
-                                return "indigo";
-                            }
-                        } else {
-                            return "black";
-                        }
-                    })
-                    .on('mouseover', function(d) {
-                        colorOver.call(this,d);
-                        //tip.show(d);
-                    })
-                    .on('mouseout', function(d) {
-                        colorOut.call(this,d);
-                        //tip.hide(d);
-                    });
+        //     svg.selectAll("rect")
+        //         .data(data)
+        //         .enter()
+        //         .append("rect")
+        //             .attr("class", "bar")
+        //             .attr("width", function() {
+        //                 return w / data.length;
+        //             })
+        //             .attr("height", function(d) {
+        //                 return scale(d.raised_amount_usd) + "px";
+        //             })
+        //             .attr("x", function(d, i) {
+        //                 return i * ((w / data.length) + 1);
+        //             })
+        //             .attr("y", function(d) {
+        //                 return h - scale(d.raised_amount_usd);
+        //             })
+        //             .attr("fill", function(d) {
+        //                 console.log(d.funding_round_type)
+        //                 if (d.funding_round_type == "seed") {
+        //                     return "teal";
+        //                 } else if (d.funding_round_type == "venture") {
+        //                     if (d.funding_round_code == "A") {
+        //                         return "red";
+        //                     } else if (d.funding_round_code == "B") {
+        //                         return "orange";
+        //                     } else if (d.funding_round_code == "C") {
+        //                         return "yellow";
+        //                     } else if (d.fnding_round_code == "D") {
+        //                         return "green";
+        //                     } else if (d.funding_round_code == "E") {
+        //                         return "blue";
+        //                     } else if (d.funding_round_code == "F") {
+        //                         return "purple";
+        //                     } else {
+        //                         return "indigo";
+        //                     }
+        //                 } else {
+        //                     return "black";
+        //                 }
+        //             })
+        //             .on('mouseover', function(d) {
+        //                 colorOver.call(this,d);
+        //                 //tip.show(d);
+        //             })
+        //             .on('mouseout', function(d) {
+        //                 colorOut.call(this,d);
+        //                 //tip.hide(d);
+        //             });
 
-        });
+        // });
 
     </script>
 

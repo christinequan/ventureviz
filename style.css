@@ -8,16 +8,7 @@ html, body {
 
 }
 
-/* div. names does not exist anymore lol fix this
-
-div.names {
-  position: relative;
-  width:100%;
-
-} */
-
-
-#slider-range {
+#slider-range, #amt-range {
   width:400px;
   margin-top:10px;
 }

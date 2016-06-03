@@ -1,7 +1,7 @@
 var date1 = new Date('1997.05.14').getTime() / 1000;
 var date2 = new Date('2015.12.15').getTime() / 1000;
 
-
+// for dates
 $(function() {
     $( "#slider-range" ).slider({
       range: true,
@@ -10,13 +10,21 @@ $(function() {
       step: 86400,
       values: [date1, date2],
       slide: function( event, ui ) {
-        $( "#amount" ).val( (new Date(ui.values[ 0 ] *1000).toDateString() ) + " - " + (new Date(ui.values[ 1 ] *1000)).toDateString() );
+        $( "#amount" ).val( (new Date(ui.values[ 0 ] *1000).toDateString() ) + " -- " + (new Date(ui.values[ 1 ] *1000)).toDateString() );
         date1 = $( "#slider-range" ).slider( "values", 0 ) * 1000;
         date2 = $( "#slider-range" ).slider( "values", 1 ) * 1000;
 
         scale = d3.scale.linear()
             .domain([0, d3.max(data, function(d) { return parseInt(d['raised_amount_usd']); })])
-            .range([0, MAX_BAR_HEIGHT]);
+            .range([0, 800]);
+
+        var yScale = d3.scale.linear()
+            .domain([d3.max(data, function(d) { return parseInt(d['raised_amount_usd']); }),0])
+            .range([5,MAX_BAR_HEIGHT]);
+
+         var xScale = d3.time.scale()
+            .domain([date1, date2])    // values between for month of january
+            .range([5, 805]);   // map these the the chart width = total width minus padding at both sides
         
         // yayay for more bad coding 
         d3.selectAll("svg > *").remove();
@@ -31,7 +39,9 @@ $(function() {
                 return scale(d.raised_amount_usd) + "px";
             })
             .attr("x", function(d, i) {
-                return i * ((w / data.length) + 1);
+                if ((i * ((w / data.length) + 1)) < 800) {
+                  return i * ((w / data.length) + 1);
+              }
             })
             .attr("y", function(d) {
                 return h - scale(d.raised_amount_usd);
@@ -76,13 +86,32 @@ $(function() {
                 tip.hide(d);
             });
 
-       
+              // define the y axis
+            var xAxis = d3.svg.axis()
+                .orient("bottom")
+                .scale(xScale);
+
+            var yAxis = d3.svg.axis()
+                .scale(yScale)
+                .orient("right");
+
+            svg.append("g")
+                .attr("transform", "translate(805,0)")
+                .attr("class", "yaxis")
+                .call(yAxis);
+
+            svg.append("g")
+                .attr("transform", "translate(0,500)")
+                .attr("class", "xaxis")
+                .call(xAxis);
+
       }
     });
     $( "#amount" ).val( (new Date($( "#slider-range" ).slider( "values", 0 )*1000).toDateString()) +
       " - " + (new Date($( "#slider-range" ).slider( "values", 1 )*1000)).toDateString());
 });
 
+// for moneyz
 $(function() {
     $( "#amt-range" ).slider({
       range: true,

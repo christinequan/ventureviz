@@ -81,7 +81,9 @@
                 for (var i = 1; i < 27; i++) {
                     var property = String(investor_string + i);
                     if (d[property] === "NA") break;
-                    response += d[property] + "<br>";
+                    response += d[property] + "<p></p>";
+
+                response += "Funded: " + d.funded_at;
                 }
 
                 return response;
@@ -89,19 +91,17 @@
 
         svg.call(tip);
 
-        var biotechURL = "https://dl.dropboxusercontent.com/s/bp3s16msslckh2g/biotechnology_small.csv?dl=0"
-        var cleantechURL = "https://dl.dropboxusercontent.com/s/5imaxqfwh5fb7so/cleantechnology_usa.csv?dl=0"
+        var biotechURL = "https://dl.dropboxusercontent.com/s/s5es35mg6o9p46k/biotechnology_small.csv?dl=0"
+        var cleantechURL = "https://dl.dropboxusercontent.com/s/okm33b2iv71taco/cleantechnology_small.csv?dl=0"
         var curatedwebURL = "https://dl.dropboxusercontent.com/s/1gih7rk2bsyey6a/curatedweb_usa.csv?dl=0"
-        var enterpriseURL = "https://dl.dropboxusercontent.com/s/znutk7ft6uimuec/e-commerce_usa.csv?dl=0"
-        var ecommerceURL = "https://dl.dropboxusercontent.com/s/nnecx5mxyug3mrz/enterprisesoftware_usa.csv?dl=0"
-        var hardwareURL = "https://dl.dropboxusercontent.com/s/miu5se5mbdarld2/hardwareandsoftware_usa.csv?dl=0"
-        var healthURL = "https://dl.dropboxusercontent.com/s/0ji157ozgkvdjrf/healthcare_usa.csv?dl=0"
-        var mobileURL = "https://dl.dropboxusercontent.com/s/k16eh23dve8qdys/mobile_usa.csv?dl=0"
-        var securityURL =   "https://dl.dropboxusercontent.com/s/aqfzq94aei9smwv/security_usa.csv?dl=0"
-        var semiconductorsURL = "https://dl.dropboxusercontent.com/s/xgxzsfz0ht20r4x/semiconductors_usa.csv?dl=0"
-        var softwareURL = "https://dl.dropboxusercontent.com/s/3pvyvhrtf128z4y/software_usa.csv?dl=0"
-
-
+        var enterpriseURL = "https://dl.dropboxusercontent.com/s/ly416w9oorr6kl3/enterprisesoftware_small.csv?dl=0"
+        var ecommerceURL = "https://dl.dropboxusercontent.com/s/nku5vpjrkerd8ab/e-commerce_small.csv?dl=0"
+        var hardwareURL = "https://dl.dropboxusercontent.com/s/zpsmyfucttf52jo/hardwareandsoftware_usa.csv?dl=0"
+        var healthURL = "https://dl.dropboxusercontent.com/s/3r9tvdxfgmf2l5d/healthcare_small.csv?dl=0"
+        var mobileURL = "https://dl.dropboxusercontent.com/s/vcocjoycs5rcqjy/mobile_small.csv?dl=0"
+        var securityURL =   "https://dl.dropboxusercontent.com/s/7cq9nihvkvwqzqf/security_small.csv?dl=0"
+        var semiconductorsURL = "https://dl.dropboxusercontent.com/s/xs8m0tz53m445br/semiconductors_small.csv?dl=0"
+        var softwareURL = "https://dl.dropboxusercontent.com/s/tkdfwszqiyuynp0/software_small.csv?dl=0"
         /* Preload all of the industry data into objects */
         var biotechData, cleantechData, curatedwebData, enterpriseData, ecommerceData, hardwareData, healthData, mobileData, securityData, semiconductorsData, softwareData;
 
@@ -177,19 +177,8 @@
             .domain([d3.max(data, function(d) { return parseInt(d['raised_amount_usd']); }),0])
             .range([5,MAX_BAR_HEIGHT]);
 
-
-        dates = data['funded_at'];
-
-        console.log("dates", typeof(dates))
-
-        var maxdate = dates[dates.length-1];
-        var mindate = dates[0];
-
-        console.log("min", mindate)
-        console.log("max", maxdate)
-
         var xScale = d3.time.scale()
-            .domain([mindate, maxdate])    // values between for month of january
+            .domain([d3.min(data, function(d) { return d['funded_at']; }), d3.max(data, function(d) { return d['funded_at']; })])    // values between for month of january
             .range([5, 805]);   // map these the the chart width = total width minus padding at both sides
             
 

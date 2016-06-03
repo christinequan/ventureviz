@@ -1,22 +1,25 @@
 var date1 = new Date('1997.05.14').getTime() / 1000;
 var date2 = new Date('2015.12.15').getTime() / 1000;
+var max_val = 10000000;
+var min_val = 100000000;
 
 // for dates
 $(function() {
     $( "#slider-range" ).slider({
+      animate:true,
       range: true,
       min: new Date('1997.05.14').getTime() / 1000,
       max: new Date('2015.12.15').getTime() / 1000,
       step: 86400,
       values: [date1, date2],
-      slide: function( event, ui ) {
+      stop: function( event, ui ) {
         $( "#amount" ).val( (new Date(ui.values[ 0 ] *1000).toDateString() ) + " -- " + (new Date(ui.values[ 1 ] *1000)).toDateString() );
         date1 = $( "#slider-range" ).slider( "values", 0 ) * 1000;
         date2 = $( "#slider-range" ).slider( "values", 1 ) * 1000;
 
-        scale = d3.scale.linear()
-            .domain([0, d3.max(data, function(d) { return parseInt(d['raised_amount_usd']); })])
-            .range([0, 800]);
+        var scale = d3.scale.linear()
+            .domain([min_val, max_val])
+            .range([0, MAX_BAR_HEIGHT]);
 
         var yScale = d3.scale.linear()
             .domain([d3.max(data, function(d) { return parseInt(d['raised_amount_usd']); }),0])
@@ -28,28 +31,32 @@ $(function() {
         
         // yayay for more bad coding 
         d3.selectAll("svg > *").remove();
+
         svg.selectAll("rect")
             .data(data)
             .enter()
+
             .append("rect")
+            .filter(function(d) { 
+              return ((d.raised_amount_usd > raised_range[0]) && (d.raised_amount_usd < raised_range[1]))     
+            })
             .attr("width", function() {
                 return w / data.length;
             })
             .attr("height", function(d) {
                 return scale(d.raised_amount_usd) + "px";
             })
-            .attr("x", function(d, i) {
-                if ((i * ((w / data.length) + 1)) < 800) {
-                  return i * ((w / data.length) + 1);
-              }
+            .attr("x", function(d,i) {
+              var curDate = new Date(d.funded_at).getTime();
+              return xScale(curDate) + "px";
             })
+
             .attr("y", function(d) {
                 return h - scale(d.raised_amount_usd);
             })
 
             .attr("fill", function(d) {
               var fund_date = new Date(d.funded_at).getTime();
-              //console.log(fund_date)
               if ((fund_date > date1) && (fund_date < date2)) {
 
                      if (d.funding_round_type == "seed") {
@@ -86,7 +93,6 @@ $(function() {
                 tip.hide(d);
             });
 
-              // define the y axis
             var xAxis = d3.svg.axis()
                 .orient("bottom")
                 .scale(xScale);
@@ -114,53 +120,60 @@ $(function() {
 // for moneyz
 $(function() {
     $( "#amt-range" ).slider({
+      animate: true,
       range: true,
       min: 0,
       max: 150000000,
       step: 5000000,
       values: [ 10000000, 100000000 ],
-      slide: function( event, ui ) {
+      stop: function( event, ui ) {
         $( "#raised" ).val( ui.values[ 0 ] + " - " + + ui.values[ 1 ] );
         raised_range[0] = $("#amt-range").slider( "values", 0);
         raised_range[1] = $("#amt-range").slider( "values", 1);
 
+        date1 = $( "#slider-range" ).slider( "values", 0 ) * 1000;
+        date2 = $( "#slider-range" ).slider( "values", 1 ) * 1000;
+
         min_val = raised_range[0];
         max_val = raised_range[1];
 
-         var scale = d3.scale.linear()
+
+        var scale = d3.scale.linear()
             .domain([min_val, max_val])
-            .range([0, MAX_BAR_HEIGHT])
-            .nice();
+            .range([0, MAX_BAR_HEIGHT]);
+
+        var xScale = d3.time.scale()
+            .domain([date1, date2])    // values between for month of january
+            .range([5, 805]);
+
 
         var yScale = d3.scale.linear()
             .domain([max_val, min_val])
-            .range([5,MAX_BAR_HEIGHT])
-            .nice();
+            .range([5,MAX_BAR_HEIGHT]);
 
-            // this right now does not display the correct min date
-        // messing around with some dates
-        var mindate = new Date(1997,5,5),
-            maxdate = new Date(2015,12,14);
-
-        var xScale = d3.time.scale()
-            .domain([mindate, maxdate])    // values between for month of january
-            .range([5, 805]);   // map these the the chart width = total width minus padding at both sides
-        
         // doing some bad coding here
         d3.selectAll("svg > *").remove();
+
+       
+
         svg.selectAll("rect")
             .data(data)
             .enter()
             .append("rect")
+            .filter(function(d) { 
+              if ((d.raised_amount_usd > raised_range[0]) && (d.raised_amount_usd < raised_range[1])) {
+                return d;
+              }
+            })
             .attr("width", function() {
                 return w / data.length;
             })
             .attr("height", function(d) {
                 return scale(d.raised_amount_usd) + "px";
             })
-            .attr("x", function(d, i) {
-                if ((i * ((w / data.length) + 1)) < 800) {
-                return i * ((w / data.length) + 1);}
+            .attr("x", function(d,i) {
+              var curDate = new Date(d.funded_at).getTime();
+              return xScale(curDate) + "px";
             })
             .attr("y", function(d) {
                 return h - scale(d.raised_amount_usd);
@@ -168,7 +181,6 @@ $(function() {
 
             .attr("fill", function(d) {
               if ((d.raised_amount_usd > raised_range[0]) && (d.raised_amount_usd < raised_range[1])) {
-                //console.log(d.raised_amount_usd)
                      if (d.funding_round_type == "seed") {
                         return "#edf8b1";
                     } else if (d.funding_round_type == "venture") {
@@ -203,6 +215,13 @@ $(function() {
                 tip.hide(d);
             });
 
+             svg.append("rect")
+              .attr("width", 100)
+              .attr("height",800)
+              .attr("fill","#ffffff")
+              .attr("x",805)
+              .attr("y",0);
+
             // define the y axis
             var xAxis = d3.svg.axis()
                 .orient("bottom")
@@ -215,6 +234,9 @@ $(function() {
             svg.append("g")
                 .attr("transform", "translate(805,0)")
                 .attr("class", "yaxis")
+                .transition()
+                .duration(500)
+                .ease("linear")
                 .call(yAxis);
 
             svg.append("g")

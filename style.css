@@ -8,6 +8,14 @@ html, body {
 
 }
 
+div#time_slide_form.slider {
+  width: 450px;
+}
+
+td {
+  width:100px;
+}
+
 #slider-range, #amt-range {
   width:400px;
   margin-top:10px;
@@ -65,12 +73,15 @@ svg {
 
 .d3-tip {
   line-height: 1;
-  font-weight: bold;
+  font-weight: none;
+  font-size:10px;
   padding: 12px;
   background: rgba(0, 0, 0, 0.8);
   color: #fff;
-  border-radius: 2px;
+  border-radius: 3px;
   pointer-events: none;
+  min-width:250px; /* I have changed here */
+    max-width:250px;
 }
 
 /* Creates a small triangle extender for the tooltip */

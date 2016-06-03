@@ -80,7 +80,7 @@
 
         svg.call(tip);
 
-        var biotechURL = "https://dl.dropboxusercontent.com/s/y0ahauamgtshh13/biotechnology_usa.csv?dl=0"
+        var biotechURL = "https://dl.dropboxusercontent.com/s/bp3s16msslckh2g/biotechnology_small.csv?dl=0"
         var cleantechURL = "https://dl.dropboxusercontent.com/s/5imaxqfwh5fb7so/cleantechnology_usa.csv?dl=0"
         var curatedwebURL = "https://dl.dropboxusercontent.com/s/1gih7rk2bsyey6a/curatedweb_usa.csv?dl=0"
         var enterpriseURL = "https://dl.dropboxusercontent.com/s/znutk7ft6uimuec/e-commerce_usa.csv?dl=0"
@@ -162,18 +162,22 @@
         // Define the axes
         var scale = d3.scale.linear()
             .domain([0, d3.max(data, function(d) { return parseInt(d['raised_amount_usd']); })])
-            .range([0, MAX_BAR_HEIGHT])
-            .nice();
+            .range([0, MAX_BAR_HEIGHT]);
 
         var yScale = d3.scale.linear()
             .domain([d3.max(data, function(d) { return parseInt(d['raised_amount_usd']); }),0])
-            .range([5,MAX_BAR_HEIGHT])
-            .nice();
+            .range([5,MAX_BAR_HEIGHT]);
 
-            // this right now does not display the correct min date
-        // messing around with some dates
-        var mindate = new Date(1997,5,5),
-            maxdate = new Date(2015,12,14);
+
+        dates = data['funded_at'];
+
+        console.log("dates", typeof(dates))
+
+        var maxdate = dates[dates.length-1];
+        var mindate = dates[0];
+
+        console.log("min", mindate)
+        console.log("max", maxdate)
 
         var xScale = d3.time.scale()
             .domain([mindate, maxdate])    // values between for month of january

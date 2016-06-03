@@ -27,9 +27,27 @@ $(function() {
         raised_range[0] = $("#amt-range").slider( "values", 0);
         raised_range[1] = $("#amt-range").slider( "values", 1);
 
-        scale = d3.scale.linear()
-            .domain([0, d3.max(data, function(d) { return parseInt(d['raised_amount_usd']); })])
-            .range([0, MAX_BAR_HEIGHT]);
+        min_val = raised_range[0];
+        max_val = raised_range[1];
+
+         var scale = d3.scale.linear()
+            .domain([min_val, max_val])
+            .range([0, MAX_BAR_HEIGHT])
+            .nice();
+
+        var yScale = d3.scale.linear()
+            .domain([max_val, min_val])
+            .range([5,MAX_BAR_HEIGHT])
+            .nice();
+
+            // this right now does not display the correct min date
+        // messing around with some dates
+        var mindate = new Date(1997,5,5),
+            maxdate = new Date(2015,12,14);
+
+        var xScale = d3.time.scale()
+            .domain([mindate, maxdate])    // values between for month of january
+            .range([5, 805]);   // map these the the chart width = total width minus padding at both sides
         
         // doing some bad coding here
         d3.selectAll("svg > *").remove();
@@ -44,7 +62,8 @@ $(function() {
                 return scale(d.raised_amount_usd) + "px";
             })
             .attr("x", function(d, i) {
-                return i * ((w / data.length) + 1);
+                if ((i * ((w / data.length) + 1)) < 800) {
+                return i * ((w / data.length) + 1);}
             })
             .attr("y", function(d) {
                 return h - scale(d.raised_amount_usd);
@@ -86,6 +105,25 @@ $(function() {
                 colorOut.call(this,d);
                 tip.hide(d);
             });
+
+            // define the y axis
+            var xAxis = d3.svg.axis()
+                .orient("bottom")
+                .scale(xScale);
+
+            var yAxis = d3.svg.axis()
+                .scale(yScale)
+                .orient("right");
+
+            svg.append("g")
+                .attr("transform", "translate(805,0)")
+                .attr("class", "yaxis")
+                .call(yAxis);
+
+            svg.append("g")
+                .attr("transform", "translate(0,500)")
+                .attr("class", "xaxis")
+                .call(xAxis);
       }
     });
     $( "#raised" ).val($( "#amt-range" ).slider( "values", 0 ) +

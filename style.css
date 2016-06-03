@@ -104,3 +104,7 @@ svg {
   top: 50%;
   left: 100%;
 }
+
+.yaxis, .xaxis {
+  font-size:10px;
+}

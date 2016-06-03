@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-<title>The Startup Universe 2.0</title>
+<title>Venture Viz</title>
 <head>
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css"> -->
     <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
     <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
     <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
@@ -30,9 +29,9 @@
 
 <body onload="initialize()">
 
-    <div class="header">
+    <header>        
         <h1>Follow the money.</h1>
-    </div>
+    </header>
 
     <div class="pure-menu custom-restricted-width">
         <span class="pure-menu-heading">Industries</span>
@@ -67,8 +66,18 @@
             .html(function(d) {
                 var company = d.company_name;
                 var response = "<h3>" + company + "</h3>";
-                response += d.funding_round_type + " " + d.funding_round_code + " " + d.raised_amount_usd + "<br>";
-                response += "<h4>Investors</h4>";
+                if (d.funding_round_type == "venture") {
+                    response += "<u>Series " + d.funding_round_code +"</u><br>";
+                } else if (d.funding_round_type == "seed") {
+                    response += "<u>Seed Round</u>"+"<br>";
+                } else if (d.funding_round_type == "angel") {
+                    response += "<u>Angel Investment</u>"+"<br>";
+                } else {
+                    response += "<u>Other Investment</u>"+"<br>";
+                }
+
+                response += "$" + d.raised_amount_usd + "<p></p>";
+                response += "<u>Investors</u><br>";
                 for (var i = 1; i < 27; i++) {
                     var property = String(investor_string + i);
                     if (d[property] === "NA") break;
@@ -270,6 +279,5 @@
             
 </div>
     
-
 
 </body>

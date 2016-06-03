@@ -50,14 +50,9 @@
         </ul>
     </div>
 
-    <!-- <div data-role="page"> -->
-        
-<!--     <div id="graph-container">
+    <div data-role="page">
 
-    </div> -->
-
-
-<!--     <div>
+<div id ="slider-container">
         <div style="width:35%; display: inline-block; margin-left: 150px">    
 
             <div data-role="main" class="ui-content">
@@ -86,12 +81,12 @@
               </form>
             </div>
         </div>
-    </div> -->
+    </div>
 
-    <!-- </div>  -->
+</div>
     
 
-
+<div id="graph-container">
     <script type="text/javascript">
 
 
@@ -140,8 +135,6 @@
             });
 
         svg.call(tip);
-
-
 
         var biotechURL = "https://dl.dropboxusercontent.com/s/y0ahauamgtshh13/biotechnology_usa.csv?dl=0"
         var cleantechURL = "https://dl.dropboxusercontent.com/s/5imaxqfwh5fb7so/cleantechnology_usa.csv?dl=0"
@@ -281,15 +274,13 @@
                         colorOut.call(this,d);
                         tip.hide(d);
                     });
-                // .on('mouseover', tip.show)
-                // .on('mouseout', tip.hide);
 
         }
 
 
 
 
-// IGNORE EVERYTHING AFTER THIS !!!!!!!!!!!!!!!!!
+// DEFAULT VIEW BELOW !!!!!!!!!!!!!!!!!
 
         // On-click --> switch view
 
@@ -392,5 +383,5 @@
         // });
 
     </script>
-
+</div>
 </body>

@@ -6,13 +6,25 @@ html, body {
     height: 100%;
     overflow: hidden;
 
-
 }
+
+/* div. names does not exist anymore lol fix this
 
 div.names {
   position: relative;
   width:100%;
 
+} */
+
+
+#slider-range {
+  width:400px;
+  margin-top:10px;
+}
+
+#slider_container {
+  position: relative;
+  padding-left: 50px;
 }
 
 div.bar {
@@ -21,6 +33,12 @@ div.bar {
     width: 10px;
     height: 0px;
     background-color: blue;
+}
+
+/* does this work let's all pray */
+svg {
+  background-color: white
+  position: relative;
 }
 
 #graph-container {

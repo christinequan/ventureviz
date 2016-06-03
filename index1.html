@@ -54,19 +54,6 @@
 
     <script type="text/javascript">
 
-        //const MAX_BAR_HEIGHT = 500;
-
-        //var data;
-
-
-        //var h = MAX_BAR_HEIGHT;
-        //var w = 800;
-
-        //var investor_string = "Investor."
-
-        // Add an svg element to the DOM
-        // var svg = d3.select("body").append("svg")
-
         var svg = d3.select("body").append("svg")
             .attr('class', 'svg')
             .attr("width", w)
@@ -84,11 +71,8 @@
                 for (var i = 1; i < 27; i++) {
                     var property = String(investor_string + i);
                     if (d[property] === "NA") break;
-                    console.log(d[property]);
                     response += d[property] + "<br>";
                 }
-                console.log(company);
-                console.log(d);
 
                 return response;
             });
@@ -143,7 +127,6 @@
             semiconductorsData = semiconductorsData_L;
             softwareData = softwareData_L;
 
-            console.log(biotechData);
         }
         // Changes colors
 
@@ -160,8 +143,7 @@
 
         // Changes the view to the correct industry
         function loadView(clicked_id) {
-            console.log(clicked_id);
-            var data;
+            
             switch(clicked_id) {
                 case 'biotech': data = biotechData; break;
                 case 'cleantech': data = cleantechData; break;
@@ -176,61 +158,64 @@
                 case 'software': data = softwareData; break;
         }
 
+        // Define the axes
         var scale = d3.scale.linear()
             .domain([0, d3.max(data, function(d) { return parseInt(d['raised_amount_usd']); })])
             .range([0, MAX_BAR_HEIGHT]);
+        console.log(scale)
 
-            d3.selectAll("svg > *").remove();
+        raised_range[1] = d3.max(data, function(d) { return parseInt(d['raised_amount_usd']); });
 
-            svg.selectAll("rect")
-                .data(data)
-                .enter()
-                .append("rect")
-                .attr("width", function() {
-                    return w / data.length;
-                })
-                .attr("height", function(d) {
-                    return scale(d.raised_amount_usd) + "px";
-                })
-                .attr("x", function(d, i) {
-                    return i * ((w / data.length) + 1);
-                })
-                .attr("y", function(d) {
-                    return h - scale(d.raised_amount_usd);
-                })
+        d3.selectAll("svg > *").remove();
 
-                .attr("fill", function(d) {
-                        console.log(d.funding_round_type)
-                        if (d.funding_round_type == "seed") {
-                            return "#edf8b1";
-                        } else if (d.funding_round_type == "venture") {
-                            if (d.funding_round_code == "A") {
-                                return "#c7e9b4";
-                            } else if (d.funding_round_code == "B") {
-                                return "#7fcdbb";
-                            } else if (d.funding_round_code == "C") {
-                                return "#41b6c4";
-                            } else if (d.fnding_round_code == "D") {
-                                return "#1d91c0";
-                            } else if (d.funding_round_code == "E") {
-                                return "#225ea8";
-                            } else if (d.funding_round_code == "F") {
-                                return "#253494";
-                            } else {
-                                return "#081d58";
-                            }
-                        } else {                                            // angel
-                            return "#ffffd9";
+        svg.selectAll("rect")
+            .data(data)
+            .enter()
+            .append("rect")
+            .attr("width", function() {
+                return w / data.length;
+            })
+            .attr("height", function(d) {
+                return scale(d.raised_amount_usd) + "px";
+            })
+            .attr("x", function(d, i) {
+                return i * ((w / data.length) + 1);
+            })
+            .attr("y", function(d) {
+                return h - scale(d.raised_amount_usd);
+            })
+
+            .attr("fill", function(d) {
+                    if (d.funding_round_type == "seed") {
+                        return "#edf8b1";
+                    } else if (d.funding_round_type == "venture") {
+                        if (d.funding_round_code == "A") {
+                            return "#c7e9b4";
+                        } else if (d.funding_round_code == "B") {
+                            return "#7fcdbb";
+                        } else if (d.funding_round_code == "C") {
+                            return "#41b6c4";
+                        } else if (d.fnding_round_code == "D") {
+                            return "#1d91c0";
+                        } else if (d.funding_round_code == "E") {
+                            return "#225ea8";
+                        } else if (d.funding_round_code == "F") {
+                            return "#253494";
+                        } else {
+                            return "#081d58";
                         }
-                })
-                    .on('mouseover', function(d) {
-                        colorOver.call(this,d);
-                        tip.show(d);
-                    })
-                    .on('mouseout', function(d) {
-                        colorOut.call(this,d);
-                        tip.hide(d);
-                    });
+                    } else {                                            // angel
+                        return "#ffffd9";
+                    }
+            })
+            .on('mouseover', function(d) {
+                colorOver.call(this,d);
+                tip.show(d);
+            })
+            .on('mouseout', function(d) {
+                colorOut.call(this,d);
+                tip.hide(d);
+            });
 
         }
 

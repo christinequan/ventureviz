@@ -1,3 +1,6 @@
+var date1 = new Date('1997.05.14').getTime() / 1000;
+var date2 = new Date('2015.12.15').getTime() / 1000;
+
 
 $(function() {
     $( "#slider-range" ).slider({
@@ -5,10 +8,75 @@ $(function() {
       min: new Date('1997.05.14').getTime() / 1000,
       max: new Date('2015.12.15').getTime() / 1000,
       step: 86400,
-      values: [ new Date('2011.01.01').getTime() / 1000, new Date('2013.02.01').getTime() / 1000 ],
+      values: [date1, date2],
       slide: function( event, ui ) {
         $( "#amount" ).val( (new Date(ui.values[ 0 ] *1000).toDateString() ) + " - " + (new Date(ui.values[ 1 ] *1000)).toDateString() );
+        date1 = $( "#slider-range" ).slider( "values", 0 ) * 1000;
+        date2 = $( "#slider-range" ).slider( "values", 1 ) * 1000;
+
+        scale = d3.scale.linear()
+            .domain([0, d3.max(data, function(d) { return parseInt(d['raised_amount_usd']); })])
+            .range([0, MAX_BAR_HEIGHT]);
         
+        // yayay for more bad coding 
+        d3.selectAll("svg > *").remove();
+        svg.selectAll("rect")
+            .data(data)
+            .enter()
+            .append("rect")
+            .attr("width", function() {
+                return w / data.length;
+            })
+            .attr("height", function(d) {
+                return scale(d.raised_amount_usd) + "px";
+            })
+            .attr("x", function(d, i) {
+                return i * ((w / data.length) + 1);
+            })
+            .attr("y", function(d) {
+                return h - scale(d.raised_amount_usd);
+            })
+
+            .attr("fill", function(d) {
+              var fund_date = new Date(d.funded_at).getTime();
+              //console.log(fund_date)
+              if ((fund_date > date1) && (fund_date < date2)) {
+
+                     if (d.funding_round_type == "seed") {
+                        return "#edf8b1";
+                    } else if (d.funding_round_type == "venture") {
+                        if (d.funding_round_code == "A") {
+                            return "#c7e9b4";
+                        } else if (d.funding_round_code == "B") {
+                            return "#7fcdbb";
+                        } else if (d.funding_round_code == "C") {
+                            return "#41b6c4";
+                        } else if (d.fnding_round_code == "D") {
+                            return "#1d91c0";
+                        } else if (d.funding_round_code == "E") {
+                            return "#225ea8";
+                        } else if (d.funding_round_code == "F") {
+                            return "#253494";
+                        } else {
+                            return "#081d58";
+                        }
+                    } else {                                            // angel
+                        return "#ffffd9";
+                    }
+              }
+                  else { 
+                    return "#ffffff";}
+            })
+            .on('mouseover', function(d) {
+                colorOver.call(this,d);
+                tip.show(d);
+            })
+            .on('mouseout', function(d) {
+                colorOut.call(this,d);
+                tip.hide(d);
+            });
+
+       
       }
     });
     $( "#amount" ).val( (new Date($( "#slider-range" ).slider( "values", 0 )*1000).toDateString()) +

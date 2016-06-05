@@ -21,6 +21,36 @@ h1 {
   margin-top:10px;
 }
 
+
+#contact {
+  display: none;
+  background: grey;
+  color: #FFF;
+  width: 300px;
+  padding-left:70px;
+  padding-top: 50px;
+  padding-right:70px;
+  padding-bottom: -50px;
+  position: absolute;
+  right: 10px;
+  top:0px;
+  height:92%;
+  opacity: 50%;
+  border-left: 3px double;
+  border-bottom-left-radius: 10em;
+  border-bottom-right-radius:10em;
+  z-index:2;
+  text-align: center;
+}
+
+#toggle {
+  position: absolute;
+  right: 10px;
+  top:0px;
+  z-index: 1;
+  text-decoration: none;
+}
+
 #slider_container {
   position: relative;
   padding-left: 50px;

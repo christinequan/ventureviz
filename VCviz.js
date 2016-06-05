@@ -164,3 +164,19 @@ $(function() {
     $( "#raised" ).val($( "#amt-range" ).slider( "values", 0 ) +
               "-" + $( "#amt-range" ).slider( "values", 1 ));
 });
+
+    // ALL THE DIV SLIDEY THINGS
+
+$(document).on('click', function(e) {
+    var elem = $(e.target).closest('#toggle'),
+        box  = $(e.target).closest('#contact'),
+        visible = $("#contact").is(":visible"); 
+    
+    if ( elem.length ) {
+        e.preventDefault();
+        $('#contact').toggle("slide", {direction: "up"});
+    }else if ((!box.length)&&($("#contact").is(":visible"))){
+      
+        $('#contact').toggle("slide", {direction: "up"});
+    }
+});

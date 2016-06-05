@@ -83,27 +83,7 @@
             .attr('class', 'd3-tip')
             .offset([-10, 0])
             .html(function(d) {
-                var company = d.company_name;
-                var response = "<h3>" + company + "</h3>";
-                if (d.funding_round_type == "venture") {
-                    response += "<u>Series " + d.funding_round_code +"</u><br>";
-                } else if (d.funding_round_type == "seed") {
-                    response += "<u>Seed Round</u>"+"<br>";
-                } else if (d.funding_round_type == "angel") {
-                    response += "<u>Angel Investment</u>"+"<br>";
-                } else {
-                    response += "<u>Other Investment</u>"+"<br>";
-                }
-
-                response += "$" + d.raised_amount_usd + "<p></p>";
-                response += "<u>Investors</u><br>";
-                for (var i = 1; i < 27; i++) {
-                    var property = String(investor_string + i);
-                    if (d[property] === "NA") break;
-                    response += d[property] + ", ";
-                }
-                response += "<br><br>Funded: " + d.funded_at;
-                return response;
+                return tooltipText(d);
             });
 
         svg.call(tip);
@@ -182,28 +162,32 @@
                 });
         }
 
-        function showTextForStartup(d) {
+        function tooltipText(d) {
             var company = d.company_name;
-                var response = "<h3>" + company + "</h3>";
-                if (d.funding_round_type == "venture") {
-                    response += "<u>Series " + d.funding_round_code +"</u><br>";
-                } else if (d.funding_round_type == "seed") {
-                    response += "<u>Seed Round</u>"+"<br>";
-                } else if (d.funding_round_type == "angel") {
-                    response += "<u>Angel Investment</u>"+"<br>";
-                } else {
-                    response += "<u>Other Investment</u>"+"<br>";
-                }
+            var response = "<h3>" + company + "</h3>";
+            if (d.funding_round_type == "venture") {
+                response += "<u>Series " + d.funding_round_code +"</u><br>";
+            } else if (d.funding_round_type == "seed") {
+                response += "<u>Seed Round</u>"+"<br>";
+            } else if (d.funding_round_type == "angel") {
+                response += "<u>Angel Investment</u>"+"<br>";
+            } else {
+                response += "<u>Other Investment</u>"+"<br>";
+            }
 
-                response += "$" + d.raised_amount_usd + "<p></p>";
-                response += "<u>Investors</u><br>";
-                for (var i = 1; i < 27; i++) {
-                    var property = String(investor_string + i);
-                    if (d[property] === "NA") break;
-                    response += d[property] + ", ";
-                }
-                response += "<br><br>Funded: " + d.funded_at;
-            document.getElementById("results").innerHTML += response;
+            response += "$" + d.raised_amount_usd + "<p></p>";
+            response += "<u>Investors</u><br>";
+            for (var i = 1; i < 27; i++) {
+                var property = String(investor_string + i);
+                if (d[property] === "NA") break;
+                response += d[property] + ", ";
+            }
+            response += "<br><br>Funded: " + d.funded_at;
+            return response;
+        }
+
+        function showTextForStartup(d) {
+            document.getElementById("results").innerHTML += tooltipText(d);
         }
 
         function resetTextForStartup() {

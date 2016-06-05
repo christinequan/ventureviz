@@ -137,6 +137,9 @@ $(function() {
       " - " + (new Date($( "#slider-range" ).slider( "values", 1 )*1000)).toDateString());
 });
 
+
+
+
 // for moneyz
 $(function() {
     $( "#amt-range" ).slider({

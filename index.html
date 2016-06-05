@@ -155,10 +155,67 @@
             softwareData = softwareData_L;
 
         }
+
+
+        function showStartup() {
+            var name = document.getElementById("startup-search").value.toLowerCase();
+            var matches = 0;
+            resetTextForStartup();
+            console.log(name);
+            svg.selectAll("rect")
+                .attr("opacity", function() {return "0"});
+            svg.selectAll("rect")
+                .data(data)
+                // .enter() // do I need this line?
+                .filter(function(d) { 
+                    console.log(d);
+                    console.log(d.company_name);
+                    var bool = d.company_name.toLowerCase() === name;
+                    if (bool) {
+                        matches++;
+                        showTextForStartup(d);
+                    }
+                    return bool;
+                })
+                .attr("opacity", function(d) {
+                    return "1"
+                });
+        }
+
+        function showTextForStartup(d) {
+            var company = d.company_name;
+                var response = "<h3>" + company + "</h3>";
+                if (d.funding_round_type == "venture") {
+                    response += "<u>Series " + d.funding_round_code +"</u><br>";
+                } else if (d.funding_round_type == "seed") {
+                    response += "<u>Seed Round</u>"+"<br>";
+                } else if (d.funding_round_type == "angel") {
+                    response += "<u>Angel Investment</u>"+"<br>";
+                } else {
+                    response += "<u>Other Investment</u>"+"<br>";
+                }
+
+                response += "$" + d.raised_amount_usd + "<p></p>";
+                response += "<u>Investors</u><br>";
+                for (var i = 1; i < 27; i++) {
+                    var property = String(investor_string + i);
+                    if (d[property] === "NA") break;
+                    response += d[property] + ", ";
+                }
+                response += "<br><br>Funded: " + d.funded_at;
+            document.getElementById("results").innerHTML += response;
+        }
+
+        function resetTextForStartup() {
+            // console.log(document.getElementById("results").innerHTML);
+            document.getElementById("results").innerHTML = "";
+
+        }
+
         // Changes colors
 
         function colorOver(point){
-            d3.select(this).style('fill','grey');
+            // d3.select(this).style('fill','grey');
             console.log("Coloring over");
             console.log(point);
             svg.selectAll("rect")
@@ -204,20 +261,59 @@
 
     </script>
 <table>
-<td><div id="slider_container">
-    <div class = "slider" id = "time_slide_form">
-        <div id="slider-range"></div>
-        <label for="amount"><b>Date Range</b></label> <input type="text" id="amount" style="border: 0; color: #000; font-weight: bold;" size="100"/>
-    </div>
+<tr>
+    <td><div id="slider_container">
+        <div class = "slider" id = "time_slide_form">
+            <div id="slider-range"></div>
+            <label for="amount"><b>Date Range</b></label> <input type="text" id="amount" style="border: 0; color: #000; font-weight: bold;" size="50"/>
+        </div>
 
-    <div class = "slider" id = "time_slide_form">
-        <div id="amt-range"></div>
-        <label for="raised"><b>Amount Raised</b></label> <input type="text" id="raised" style="border: 0; color: #000; font-weight: bold;" size="100"/>
-    </div>
+        <div class = "slider" id = "time_slide_form">
+            <div id="amt-range"></div>
+            <label for="raised"><b>Amount Raised</b></label> <input type="text" id="raised" style="border: 0; color: #000; font-weight: bold;" size="50"/>
+        </div>
             
-</div></td>
+    </div></td>
+    <td>
+        <form class="pure-form">
+            <label for="option-two" class="pure-radio">
+                <input id="option-two" type="radio" name="optionsRadios" value="option1" checked>
+                Search by startup
+            </label>
 
+            <label for="option-three" class="pure-radio">
+                <input id="option-three" type="radio" name="optionsRadios" value="option2">
+                Search by investors
+            </label>
+        </form>
+    </td>
+
+    <td>
+        <div>
+            <form class="pure-form">
+                <input type="text" class="pure-input-rounded" placeholder="Startup" id="startup-search">
+                <button type="submit" class="pure-button" onclick="showStartup()">Search</button>
+            </form>
+        </div>
+    </td>
+
+    <td>
+        <div>
+            <form class="pure-form">
+                <input type="text" class="pure-input-rounded" placeholder="Investor">
+                <button type="submit" class="pure-button">Search</button>
+            </form>
+        </div>
+    </td>
+    <td>
+        <div id="results">
+        </div>
+    </td>
+</tr>
+
+ 
 </table>
+
     
 
 </body>

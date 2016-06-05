@@ -56,7 +56,8 @@
             .append("svg")
             .attr('class', 'svg')
             .attr("width", w+100)
-            .attr("height", h+50);
+            .attr("height", h+50)
+            .on('mouseout', function() {reDraw();});
 
 
         var tip = d3.tip()
@@ -137,11 +138,24 @@
         }
         // Changes colors
 
-        function colorOver(d){
+        function colorOver(point){
             d3.select(this).style('fill','grey');
+            console.log("Coloring over");
+            console.log(point);
+            svg.selectAll("rect")
+                .attr("opacity", function() {return "0.1"});
+            svg.selectAll("rect")
+                .data(data)
+                // .enter() // do I need this line?
+                .filter(function(d) { 
+                    console.log(d);
+                    console.log(d.company_name);
+                    return d.company_name === point.company_name;
+                })
+                .attr("opacity", function(d) {return "1"});
         }
 
-        function colorOut(d) {
+        function colorOut(point) {
             var rect = d3.select(this);
             rect.style("fill", function(d) {
                 return d.color;

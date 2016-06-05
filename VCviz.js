@@ -4,6 +4,8 @@ var max_val = 10000000;
 var min_val = 100000000;
 const MAX_BAR_HEIGHT = 500;
 var data;
+var filtered;
+var filterSize = 0;
 var h = MAX_BAR_HEIGHT;
 var padding = 100;
 var w = 800;
@@ -26,16 +28,23 @@ function reDraw(d) {
         // yayay for more bad coding 
         d3.selectAll("svg > *").remove();
 
+        filterSize = 0;
         svg.selectAll("rect")
             .data(data)
             .enter()
 
             .append("rect")
             .filter(function(d) { 
-              return ((d.raised_amount_usd > raised_range[0]) && (d.raised_amount_usd < raised_range[1]))     
+              var bool = ((d.raised_amount_usd > raised_range[0]) && (d.raised_amount_usd < raised_range[1]));
+              if (bool) {
+                filterSize++;
+              }
+              return bool;
             })
+
             .attr("width", function() {
-                return w / data.length;
+                return w / filterSize;
+                // return w / filtered.length;
             })
             .attr("height", function(d) {
                 return scale(d.raised_amount_usd) + "px";

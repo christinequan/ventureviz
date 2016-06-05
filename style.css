@@ -12,10 +12,10 @@ div#time_slide_form.slider {
   width: 450px;
 }
 
-td {
-  width:100px;
+h1 {
+  margin-bottom: 0px;
+  margin-top: 0px;
 }
-
 #slider-range, #amt-range {
   width:400px;
   margin-top:10px;
@@ -88,7 +88,7 @@ svg {
 .d3-tip:after {
   box-sizing: border-box;
   display: inline;
-  font-size: 10px;
+  font-size: 12px;
   width: 100%;
   line-height: 1;
   color: rgba(0, 0, 0, 0.8);

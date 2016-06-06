@@ -43,6 +43,16 @@ h1 {
   text-align: center;
 }
 
+#color-container {
+  position: absolute;
+  right: 10px;
+  /*font-variant: small-caps;*/
+  text-align: center;
+  width:100px;
+  padding: 5px;
+  border: 2px double #ccc;
+}
+
 #toggle {
   position: absolute;
   right: 10px;

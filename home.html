@@ -66,7 +66,7 @@
     </div>
 
     <div id = "how">
-    <img src="http://www.myiconfinder.com/uploads/iconsets/128-128-f6d0e95a9630ef1c39b2fff14e0bbd60.png"><br>
+    <img src="http://www.myiconfinder.com/uploads/iconsets/128-128-05e10047c8f8b571bc71c5b7fb34565b-help.png"><br>
 
     <h3>Q: What am I looking at?</h3>
     A: A visualization of startup investments over the span of time.
@@ -201,7 +201,7 @@
 
         function filterByVC() {
             var name = document.getElementById("vc-search").value.toLowerCase();
-            currentVC_investments = [];
+            currentVC_investments = new Set();
             var matches = 0;
             svg.selectAll("rect")
                 .attr("opacity", function() {return "0"});
@@ -212,7 +212,7 @@
                         var vc = String(investor_string + i);
                         if (d[vc] === "NA") break;
                         if (d[vc].toLowerCase() === name) {
-                            currentVC_investments.push(d.company_name);
+                            currentVC_investments.add(d.company_name);
                             return true;
                         }
                     }
@@ -255,9 +255,7 @@
         function showVCCompanies() {
             var text = "<center><b>Companies Invested In:<br></b>";
 
-            for (var i = 0; i < currentVC_investments.length; i++) {
-                text += currentVC_investments[i] + "<br>";
-            }
+            currentVC_investments.forEach(function(nameOfCompany) {  text += nameOfCompany + "<br>";  });
             text += "</center>"
             document.getElementById("vc_companies").innerHTML = text;
             $('#vc_companies').show();

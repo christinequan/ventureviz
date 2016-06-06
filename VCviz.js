@@ -115,6 +115,9 @@ function reDraw(d) {
                 .call(xAxis);
 }
 
+
+
+
 // for dates
 $(function() {
     $( "#slider-range" ).slider({

@@ -222,6 +222,18 @@
             });
         }
 
+        /* Updates scrolling company list */
+        function updateCompanyList() {
+            var newText = "";
+            for (var i = 0; i < data.length; i++) {
+                newText += "<li class=\"pure-menu-item\">" + data[i].company_name + "</li>";
+            }
+
+
+            document.getElementById("scrolling-company-list").innerHTML += newText;
+
+        }
+
         // Changes the view to the correct industry
         function loadView(clicked_id) {
             
@@ -240,6 +252,7 @@
         }
 
         reDraw();
+        updateCompanyList();
     }
 
 
@@ -276,7 +289,7 @@
         <div>
             <form class="pure-form">
                 <input type="text" class="pure-input-rounded" placeholder="Startup" id="startup-search">
-                <button class="pure-button" onclick="showStartup()">Search</button>
+                <button type="button" class="pure-button" onclick="showStartup()">Search</button>
             </form>
         </div>
     </td>
@@ -285,7 +298,7 @@
         <div>
             <form class="pure-form">
                 <input type="text" class="pure-input-rounded" placeholder="Investor">
-                <button class="pure-button">Search</button>
+                <button type="button" class="pure-button">Search</button>
             </form>
         </div>
     </td>
@@ -295,8 +308,27 @@
     </td>
 </tr>
 
+
+
+
  
 </table>
+
+<style>
+/* Customization to limit height of the menu */
+.custom-restricted {
+    height: 700px;
+    width: 300px;
+    border: 1px solid gray;
+    border-radius: 4px;
+}
+</style>
+
+<div class="pure-menu pure-menu-scrollable custom-restricted">
+    <ul class="pure-menu-list" id="scrolling-company-list">
+        
+    </ul>
+</div>
 
     
 

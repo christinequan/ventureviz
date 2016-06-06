@@ -188,3 +188,17 @@ $(document).on('click', function(e) {
         $('#contact').toggle("slide", {direction: "up"});
     }
 });
+
+$(document).on('click', function(e) {
+    var elem2 = $(e.target).closest('#toggle2'),
+        box2  = $(e.target).closest('#how'),
+        visible2 = $("#how-to").is(":visible"); 
+    
+    if ( elem2.length ) {
+        e.preventDefault();
+        $('#how').toggle("slide", {direction: "up"});
+    }else if ((!box2.length)&&($("#how").is(":visible"))){
+      
+        $('#how').toggle("slide", {direction: "up"});
+    }
+});

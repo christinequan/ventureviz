@@ -26,16 +26,16 @@
 </head>
 
 <header>        
-      <h1>Venture Viz</h1>
-    <a href="#something" id="toggle"><h1>
-    About</h1></a>
-    <h2>A visualization of investments in the startup world</h2>
+      <img src="http://www.myiconfinder.com/uploads/iconsets/64-64-cfa0efaebe8f48f8e0588310eae67f40.png" align="left"><h1>Venture Viz</h1>
+    
+    <h2>a look at investments in the startup world</h2>
+    </header>
     <div id="contact">
-
-    <img src="http://www.myiconfinder.com/uploads/iconsets/128-128-cfa0efaebe8f48f8e0588310eae67f40.png"><br><br>
+<img src="http://www.myiconfinder.com/uploads/iconsets/128-128-cfa0efaebe8f48f8e0588310eae67f40.png">
+    <br><br>
     <h2>
     What is Venture Viz?
-    </h2>
+    </h2><br>
 
     We are a group looking to visualize trends within the startup ecosystem in the United States. Using data scraped from Crunchbase, we've produced a visualization of the latest investments around the nation.
     <br><br>
@@ -47,19 +47,23 @@
     <br> Stanford University
     </div>
 
-    <div id ="color-container">
-Legend
-<div style="background-color: #edf8b1;">Seed</div>
-<div style="background-color: #c7e9b4;">Series A</div>
-<div style="background-color: #7fcdbb;">Series B</div>
-<div style="background-color: #41b6c4;">Series C</div>
-<div style="background-color: #1d91c0;">Series D</div>
-<div style="background-color: #225ea8;color:#fff";">Series E</div>
-<div style="background-color: #253494;color:#fff";>Series F</div>
-<div style="background-color: #081d58;color:#fff";">Angel</div>
-</div>
+    <div id = "how">
+    <img src="http://www.myiconfinder.com/uploads/iconsets/128-128-f6d0e95a9630ef1c39b2fff14e0bbd60.png"><br>
 
-</header>
+    <h3>Q: What am I looking at?</h3>
+    A: A visualization of startup investments over the span of time.
+
+    <h3>Q: How do I begin viewing?</h3>
+    A: Start by clicking on the industry you are most interested in, then on the appropriate amount raised. From there, you can view the graph. Adjust the date range accordingly, as well.
+
+    <h3>Q: How do I search for a specific investor?</h3>
+    A: Click on the industry you are interested in, and then search for the investor name (case insensitive). If the VC has invested in that industry, then you will see a box appear in the right sidebar displaying the VC's investments. Otherwise, you will not see a box.
+
+    <h3>Q: How do I search for a specific company?</h3>
+    A: Click on the industry the company falls under, and then search its name. If the company has fundraising historical data and belongs in that industry, then a box will appear in the right sidebar displaying the previous rounds, amount raised, and investors involved.
+    </div>
+
+
 
 <body>
 
@@ -80,7 +84,6 @@ Legend
 
         </ul>
     </div>
-
     <script type="text/javascript">
 
         var svg = d3.select("body")
@@ -171,6 +174,10 @@ Legend
                 .attr("opacity", function(d) {
                     return "1"
                 });
+                $('#results').show();
+                $('#display-search-text').show();
+                if ($("#vc_companies").is(":visible")) {
+                $('#vc_companies').show();}
         }
 
 
@@ -224,17 +231,22 @@ Legend
         }
 
         function showTextForStartup(d) {
-            document.getElementById("results").innerHTML += tooltipText(d);
+            document.getElementById("results").innerHTML += "<center>Company Search Results:<br>" + tooltipText(d) +"</center>";
         }
 
         function showVCCompanies() {
-            var text = "";
-            console.log(currentVC_investments);
+            var text = "<center><b>Companies Invested In:<br></b>";
 
             for (var i = 0; i < currentVC_investments.length; i++) {
                 text += currentVC_investments[i] + "<br>";
             }
+            text += "</center>"
             document.getElementById("vc_companies").innerHTML = text;
+            $('#vc_companies').show();
+            $('#display-search-text').show();
+
+            if ($("#results").is(":visible")) {
+            $('#results').show();}
         }
 
         function resetTextForStartup() {
@@ -347,9 +359,7 @@ Legend
                 <button type="button" class="pure-button" onclick="showStartup()">Search</button>
             </form>
         </div>
-    </td>
-
-    <td>
+   
         <div>
             <form class="pure-form">
                 <input type="text" class="pure-input-rounded" placeholder="Investor" id="vc-search">
@@ -358,44 +368,39 @@ Legend
         </div>
     </td>
     <td>
-        <div id="results">
-        </div>
+
+    <td><div id ="color-container">
+
+<div style="background-color: #edf8b1;">Seed</div>
+<div style="background-color: #c7e9b4;">Series A</div>
+<div style="background-color: #7fcdbb;">Series B</div>
+<div style="background-color: #41b6c4;">Series C</div>
+</div></td><td>
+<div id = "color-container">
+<div style="background-color: #1d91c0;">Series D</div>
+<div style="background-color: #225ea8;color:#fff";">Series E</div>
+<div style="background-color: #253494;color:#fff";>Series F</div>
+<div style="background-color: #081d58;color:#fff";">Angel</div>
+</div></td>
+
     </td>
-    <td>
-        <div id="vc_companies">
-        </div>
-    </td>
-</tr>
+    </tr>
+    </table>
+    <div id = "results-wrapper">
+    <a href="#something" id="toggle"><div id = "button">About</div></a>
+    <a href="#another" id="toggle2"> <div id = "button2">How-To</div></a>
+<br><br><center>
+        <b>Companies in this Industry</b></center>
+        <div class="test-class"><Center><ul class="pure-menu-list" id="scrolling-company-list"></ul></Center></div><br>
 
-
-
-
+<center><b>Venture Capitalists in this Industry</b></center>
+<div class="test-class"><center><ul class="pure-menu-list" id="scrolling-vc-list"></ul>
+</center></div>
+<br>
+<div id="display-search-text"><Center>Search Results</Center></div>
+<div id="results"></div>
+        <div id="vc_companies"></div>
+</div>
  
-</table>
-
-<style>
-/* Customization to limit height of the menu */
-.custom-restricted {
-    height: 700px;
-    width: 300px;
-    border: 1px solid gray;
-    border-radius: 4px;
-}
-</style>
-
-<div class="pure-menu pure-menu-scrollable custom-restricted">
-    <ul class="pure-menu-list" id="scrolling-company-list">
-        
-    </ul>
-</div>
-
-
-<div class="pure-menu pure-menu-scrollable custom-restricted">
-    <ul class="pure-menu-list" id="scrolling-vc-list">
-        
-    </ul>
-</div>
-    
-
 </body>
 </html>

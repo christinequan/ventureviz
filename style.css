@@ -4,7 +4,7 @@ html, body {
     font-family: "Khula";
     width: 100%;
     height: 100%;
-    overflow: hidden;
+    font-size: 12px;
 
 }
 
@@ -12,19 +12,47 @@ div#time_slide_form.slider {
   width: 450px;
 }
 
-h1 {
-  margin-bottom: 0px;
-  margin-top: 0px;
+header {
+  padding-left: 30px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  
+  z-index: -1;
+  
+
 }
+h1, h2 {
+  display:inline-block;
+  vertical-align: middle;
+  padding-left: 10px;
+}
+
+
 #slider-range, #amt-range {
   width:400px;
   margin-top:10px;
 }
 
+#button, #button2 {
+  width:130px;
+  padding-right:5px;
+  background-color: #225ea8;
+  color: #fff;
+  display:inline-block;
+  text-align: center;
+  font-size: 14px;
 
-#contact {
+  border-bottom-left-radius: 1em;
+  border-bottom-right-radius:1em;
+}
+
+td {
+  padding: 5px;
+}
+
+#contact, #how{
   display: none;
-  background: grey;
+  background: #225ea8;
   color: #FFF;
   width: 300px;
   padding-left:70px;
@@ -43,19 +71,20 @@ h1 {
   text-align: center;
 }
 
+
 #color-container {
-  position: absolute;
+  /*position: absolute;
   right: 10px;
-  /*font-variant: small-caps;*/
+  font-variant: small-caps;*/
   text-align: center;
   width:100px;
   padding: 5px;
-  border: 2px double #ccc;
+  /*border: 2px double #ccc;*/
 }
 
 #toggle {
-  position: absolute;
-  right: 10px;
+  position: relative;
+  right: 0px;
   top:0px;
   z-index: 1;
   text-decoration: none;
@@ -86,24 +115,6 @@ svg {
     height: 500px;
 }
 
-#header {
-    padding-left: 10px;
-    padding-top: 5px;
-    padding-bottom: 10px;
-    height:100px;
-    width: 100%;
-    background-color: #0A7D40;
-    border-bottom: thick solid #000;
-    opacity: 0.6;
-    font-family: "Karla";
-    color: white;
-    float: center;
-    -webkit-box-shadow: 0px 3px 5px rgba(100, 100, 100, 0.49);
- -moz-box-shadow:    0px 3px 5px rgba(100, 100, 100, 0.49);
- box-shadow:         0px 3px 5px rgba(100, 100, 100, 0.49);
-}
-
-
 .custom-restricted-width {
     /* To limit the menu width to the content of the menu: */
     display: inline-block;
@@ -122,7 +133,45 @@ svg {
   pointer-events: none;
   min-width:250px; /* I have changed here */
     max-width:250px;
+    position: absolute;
 }
+
+#results,#vc_companies {
+  position: relative;
+  top: 0px;
+  right: 15px;
+  margin-top: 5px;
+  border: 2px double #ccc;
+  width: 300px;
+  height:100px;
+  overflow: auto;
+  display:none;
+  background-color: #eee;
+}
+
+#display-search-text {
+  display:none;
+}
+
+#results-wrapper {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  padding-left: 40px;
+  /*border-left: 1px double #222; */
+  height: 100%;
+  background-color: #ccc;
+}
+.test-class {
+  position: relative;
+  height:200px;
+  overflow: auto;
+  border: 2px double #ccc;
+  width: 300px;
+  right: 15px;
+  background-color: #eee;
+}
+
 
 /* Creates a small triangle extender for the tooltip */
 .d3-tip:after {
@@ -172,4 +221,12 @@ svg {
 
 .yaxis, .xaxis {
   font-size:10px;
+}
+
+/* Customization to limit height of the menu */
+.custom-restricted {
+    height: 700px;
+    width: 300px;
+    border: 1px solid gray;
+    border-radius: 4px;
 }

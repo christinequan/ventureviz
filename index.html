@@ -146,7 +146,6 @@
                 .attr("opacity", function() {return "0"});
             svg.selectAll("rect")
                 .data(data)
-                // .enter() // do I need this line?
                 .filter(function(d) { 
                     console.log(d);
                     console.log(d.company_name);
@@ -160,6 +159,32 @@
                 .attr("opacity", function(d) {
                     return "1"
                 });
+        }
+
+
+        function filterByVC() {
+            var name = document.getElementById("vc-search").value.toLowerCase();
+            currentVC_investments = [];
+            var matches = 0;
+            svg.selectAll("rect")
+                .attr("opacity", function() {return "0"});
+            svg.selectAll("rect")
+                .data(data)
+                .filter(function(d) { 
+                    for (var i = 1; i < 27; i++) {
+                        var vc = String(investor_string + i);
+                        if (d[vc] === "NA") break;
+                        if (d[vc].toLowerCase() === name) {
+                            currentVC_investments.push(d.company_name);
+                            return true;
+                        }
+                    }
+                    return false;
+                })
+                .attr("opacity", function(d) {
+                    return "1"
+                });            
+            showVCCompanies();
         }
 
         function tooltipText(d) {
@@ -188,6 +213,16 @@
 
         function showTextForStartup(d) {
             document.getElementById("results").innerHTML += tooltipText(d);
+        }
+
+        function showVCCompanies() {
+            var text = "";
+            console.log(currentVC_investments);
+
+            for (var i = 0; i < currentVC_investments.length; i++) {
+                text += currentVC_investments[i] + "<br>";
+            }
+            document.getElementById("vc_companies").innerHTML = text;
         }
 
         function resetTextForStartup() {
@@ -225,13 +260,31 @@
         /* Updates scrolling company list */
         function updateCompanyList() {
             var newText = "";
+            console.log(data[0]);
             for (var i = 0; i < data.length; i++) {
                 newText += "<li class=\"pure-menu-item\">" + data[i].company_name + "</li>";
             }
 
 
-            document.getElementById("scrolling-company-list").innerHTML += newText;
+            document.getElementById("scrolling-company-list").innerHTML = newText;
 
+        }
+
+        function updateVCList() {
+            currentVCs_view = new Set();
+            for (var i = 0; i < data.length; i++) {
+                for (var j = 1; j < 27; j++) {
+                    var new_vc = String(investor_string + j);
+                    if (data[i][new_vc] === "NA") break;
+                    currentVCs_view.add(data[i][new_vc]);
+                }
+            }
+            var newText = "";
+            currentVCs_view.forEach(function(value) {
+                console.log(value);
+                newText += "<li class=\"pure-menu-item\">" + value + "</li>";
+            });
+            document.getElementById("scrolling-vc-list").innerHTML = newText;
         }
 
         // Changes the view to the correct industry
@@ -253,6 +306,7 @@
 
         reDraw();
         updateCompanyList();
+        updateVCList();
     }
 
 
@@ -270,20 +324,9 @@
             <label for="raised"><b>Amount Raised</b></label> <input type="text" id="raised" style="border: 0; color: #000; font-weight: bold;" size="50"/>
         </div>
             
-    </div></td>
-    <td>
-        <form class="pure-form">
-            <label for="option-two" class="pure-radio">
-                <input id="option-two" type="radio" name="optionsRadios" value="option1" checked>
-                Search by startup
-            </label>
-
-            <label for="option-three" class="pure-radio">
-                <input id="option-three" type="radio" name="optionsRadios" value="option2">
-                Search by investors
-            </label>
-        </form>
+    </div>
     </td>
+
 
     <td>
         <div>
@@ -297,13 +340,17 @@
     <td>
         <div>
             <form class="pure-form">
-                <input type="text" class="pure-input-rounded" placeholder="Investor">
-                <button type="button" class="pure-button">Search</button>
+                <input type="text" class="pure-input-rounded" placeholder="Investor" id="vc-search">
+                <button type="button" class="pure-button" onclick="filterByVC()">Search</button>
             </form>
         </div>
     </td>
     <td>
         <div id="results">
+        </div>
+    </td>
+    <td>
+        <div id="vc_companies">
         </div>
     </td>
 </tr>
@@ -330,6 +377,12 @@
     </ul>
 </div>
 
+
+<div class="pure-menu pure-menu-scrollable custom-restricted">
+    <ul class="pure-menu-list" id="scrolling-vc-list">
+        
+    </ul>
+</div>
     
 
 </body>

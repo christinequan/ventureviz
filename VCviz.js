@@ -4,6 +4,8 @@ var max_val = 10000000;
 var min_val = 100000000;
 const MAX_BAR_HEIGHT = 500;
 var data;
+var currentVCs_view;
+var currentVC_investments;
 var filtered;
 var filterSize = 0;
 var h = MAX_BAR_HEIGHT;
